@@ -867,14 +867,21 @@ namespace FB2Snitch.DAL
 
     public class DBManager 
     {
-        public static bool FindBookBy5Hash(String hash)
+        public static int FindBookBy5Hash(String hash)
         {
-            return true;
+            return -1;
         }
 
-        public static bool AddBook(BLL.FB2Description fb2desc)
+        public static int AddBook(BLL.FB2Description fb2desc, string arcshortfilename, string hash)
         {
-            return true;
+            try {
+
+                return 0;
+            }
+            catch
+            {
+                throw new FB2DBException("Не удалось сохранить книку в DB");
+            }            
         }
 
     }

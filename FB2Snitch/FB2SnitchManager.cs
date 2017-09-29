@@ -1,0 +1,70 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FB2Snitch.BLL
+{
+    //public enum ResponseStatus { Error = 0, Success };
+
+    //public struct Response {
+    //    public ResponseStatus status;
+    //    public String         description;
+
+    //    public Response(ResponseStatus status, String description)
+    //    {
+    //        this.description = description;
+    //        this.status = status;
+    //    }
+    //}
+
+    class FB2SnitchManager
+    {
+
+        public int AddBook(String fb2fullfilename)
+        {
+            string fullfilename = fb2fullfilename;
+            string shortarcfilename = string.Empty;
+            string hash = string.Empty;
+            int    bookid = -1;
+            try
+            {
+                //1. Проверяем что это именно fb2 файл и сваливаем если это не так
+                FB2Description fb2desc = FB2Manager.ReadDecription(fb2fullfilename);
+                //2. Подсчитали MD5-хешь сумму
+                hash = MD5Hash.GetFileHash(fb2fullfilename);
+                //3. Проверяем в DB, что такой файл еще не добавлен
+                bookid = DAL.DBManager.FindBookBy5Hash(hash);
+                if (bookid > -1) return bookid;
+                //4. Добавили его в архив (нашли архив в который его добавлять, сгенерировали уникальное имя, заархивировали)
+                shortarcfilename = ZipBLL.AddFile(fb2fullfilename, hash + ".fb2");
+                //5. Добавили его в DB 
+                return DAL.DBManager.AddBook(fb2desc, shortarcfilename, hash);
+            }
+            catch (FB2BaseException ex)
+            {
+                throw new FB2BLLException(ex.Message);
+            }
+            catch (FB2MD5HashException ex)
+            {
+                throw new FB2BLLException(ex.Message);
+            }
+            catch (FB2ZipException ex)
+            {
+                throw new FB2BLLException(ex.Message);
+            }
+            catch (FB2DBException ex)
+            {
+                try {
+                    ZipBLL.DeleteFile(shortarcfilename, hash + ".fb2");
+                    throw;
+                }
+                catch (FB2ZipException e)
+                {
+                    throw new FB2BLLException(ex.Message + "\n" + e.Message);
+                }                
+            }
+        }
+    }
+}

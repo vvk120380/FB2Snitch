@@ -101,8 +101,7 @@ namespace FB2Snitch.BLL
         {
             ZipArchiveMode zip_mode = ZipArchiveMode.Update;
 
-            if (!File.Exists(arc_name))
-                zip_mode = ZipArchiveMode.Create;
+            if (!File.Exists(arc_name)) zip_mode = ZipArchiveMode.Create;
 
             try
             {
@@ -114,29 +113,17 @@ namespace FB2Snitch.BLL
                         archive.CreateEntryFromFile(filename, fi.Name, CompressionLevel.Fastest);
                     }
                     else
-                    {
                         archive.CreateEntryFromFile(filename, entryname, CompressionLevel.Fastest);
-                    }
 
                 }
+
+                return (true);
             }
             catch (Exception ex)
             {
-#if DEBUG
-                Console.WriteLine("Exception! Func: [AddFile]\n Message:" + ex.Message);
-#endif
-
-                return (false);
+                throw new FB2ZipException("Не удалось добавить файл в zip архив");
             }
 
-            return (true);
-        }
-        #endregion
-
-        #region [AddFile] Добавляет 1 файл в архив
-        static public bool AddFile(string arc_name, string filename)
-        {
-            return (AddFile(arc_name, filename, string.Empty));
         }
         #endregion
 
@@ -171,24 +158,19 @@ namespace FB2Snitch.BLL
         static public bool DeleteFile(string arc_name, string filename)
         {
             ZipArchiveMode zip_mode = ZipArchiveMode.Update;
-
-            if (!File.Exists(arc_name)) return false;
-                
+            if (!File.Exists(arc_name))
+                throw new FB2ZipException(String.Format("Файл <%s> не найден", arc_name));
             try
             {
                 using (ZipArchive archive = ZipFile.Open(arc_name, zip_mode, Encoding.GetEncoding("cp866")))
                 {
                     FileInfo fi = new FileInfo(filename);
-
                     IEnumerable<ZipArchiveEntry> query = archive.Entries.Where(q => q.Name == filename); 
                     List<ZipArchiveEntry> list = query.ToList<ZipArchiveEntry>();
                     for (int i = 0; i < list.Count; i++) list[i].Delete();
                 }
             }
-            catch 
-            {
-                return (false);
-            }
+            catch {throw new FB2ZipException("Не удалось удалить файл из zip архива"); }
 
             return (true);
         }

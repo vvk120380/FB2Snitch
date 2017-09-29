@@ -7,3 +7,12 @@ c:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\bin\Debug\FB2Snitch.exe
 c:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\bin\Debug\FB2Snitch.pdb
 c:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.exe
 c:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.pdb
+c:\Coding\FB2Snitch\FB2Snitch\bin\Debug\FB2Snitch.exe.config
+c:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.csprojResolveAssemblyReference.cache
+c:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.FB2SnitchForm.resources
+c:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.Properties.Resources.resources
+c:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.csproj.GenerateResource.Cache
+c:\Coding\FB2Snitch\FB2Snitch\bin\Debug\FB2Snitch.exe
+c:\Coding\FB2Snitch\FB2Snitch\bin\Debug\FB2Snitch.pdb
+c:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.exe
+c:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.pdb

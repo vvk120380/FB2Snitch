@@ -48,9 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BLL\CatalogManager.cs" />
     <Compile Include="BLL\FB2Base.cs" />
-    <Compile Include="BLL\FB2SnitchManager.cs" />
+    <Compile Include="FB2Exceptions.cs" />
+    <Compile Include="FB2SnitchManager.cs" />
     <Compile Include="BLL\FileUtils.cs" />
     <Compile Include="BLL\MD5Hash.cs" />
     <Compile Include="BLL\ZipBLL.cs" />

@@ -37,7 +37,8 @@ namespace FB2Snitch.BLL
                 int arcitemcount = ZipLib.GetItemCount(arcfullname);
 
                 // Возникла ошибка, сваливаем
-                if (arcitemcount == -1) return (String.Empty);
+                if (arcitemcount == -1)
+                    throw new FB2ZipException("Не удалось подсчетать кол-во файлов в Zip архиве");
 
                 if (arcitemcount >= Properties.Settings.Default.MaxFileCountInArchive)
                 {
@@ -51,17 +52,25 @@ namespace FB2Snitch.BLL
                 arcfullname = dirpath + "\\" + arcshortname;
             }
 
-            if (!ZipLib.AddFile(arcfullname, filefullname, uniquefilename)) return (String.Empty);
+            try
+            {
+                ZipLib.AddFile(arcfullname, filefullname, uniquefilename);
+            }
+            catch (FB2ZipException){ throw; }
 
             return (arcshortname);
         }
         #endregion
 
-        #region
+        #region [DeleteFile] Удаляет файл из архива
         public static bool DeleteFile(String arcshortname, String uniquefilename)
         {
-            String arcfullname = Properties.Settings.Default.BaseArcDir + "\\" + arcshortname;
-            return ZipLib.DeleteFile(arcfullname, uniquefilename);
+            try
+            {
+                String arcfullname = Properties.Settings.Default.BaseArcDir + "\\" + arcshortname;
+                return ZipLib.DeleteFile(arcfullname, uniquefilename);
+            }
+            catch (FB2ZipException) { throw; }
         }
         #endregion
 
@@ -97,8 +106,5 @@ namespace FB2Snitch.BLL
             return (maxacrnum);
         }
         #endregion
-        //---------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
     }
 }

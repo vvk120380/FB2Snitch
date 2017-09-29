@@ -15,26 +15,32 @@ namespace FB2Snitch.BLL
             StringBuilder sBuilder = new StringBuilder();
             for (int i = 0; i < hashValue.Length; i++)
                 sBuilder.Append(hashValue[i].ToString("X2"));
-
-            return sBuilder.ToString();
+            return sBuilder.ToString().Replace("-","");
         }
         #endregion
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------
         #region [GetMD5HashFromFile] Получить значение Хеша из файла
         public static string GetFileHash(string FileName)
         {
-            string strHash = "";
-            using (System.IO.FileStream fileStream = System.IO.File.Open(FileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+            try
             {
-                fileStream.Position = 0;
-                using (System.Security.Cryptography.MD5 md5Hash = System.Security.Cryptography.MD5.Create())
+                string strHash = "";
+                using (System.IO.FileStream fileStream = System.IO.File.Open(FileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
                 {
-                    byte[] hashValue = md5Hash.ComputeHash(fileStream);
-                    strHash = ConverterHashToString(hashValue);
+                    fileStream.Position = 0;
+                    using (System.Security.Cryptography.MD5 md5Hash = System.Security.Cryptography.MD5.Create())
+                    {
+                        byte[] hashValue = md5Hash.ComputeHash(fileStream);
+                        strHash = ConverterHashToString(hashValue);
+                    }
+                    fileStream.Close();
                 }
-                fileStream.Close();
+                return strHash;
             }
-            return strHash;
+            catch
+            {
+                throw new FB2MD5HashException("Ошибка при расчете MD5 хэш-суммы");
+            }
         }
         #endregion
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------

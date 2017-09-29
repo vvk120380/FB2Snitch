@@ -7,7 +7,7 @@ using System.Xml;
 namespace FB2Snitch.BLL
 {
 
-    class FB2Person
+    public class FB2Person
     {
         public FB2Person()
         {
@@ -67,7 +67,7 @@ namespace FB2Snitch.BLL
 
     }
 
-    class FB2TitleInfo
+    public class FB2TitleInfo
     {
         public FB2TitleInfo()
         {
@@ -178,7 +178,7 @@ namespace FB2Snitch.BLL
 
     }
 
-    class FB2DocumentInfo
+    public class FB2DocumentInfo
     {
         public FB2DocumentInfo()
         {
@@ -219,7 +219,7 @@ namespace FB2Snitch.BLL
         }
     }
 
-    class FB2PublishInfo
+    public class FB2PublishInfo
     {
         public FB2PublishInfo()
         {
@@ -281,7 +281,6 @@ namespace FB2Snitch.BLL
                         }
                 }
             }
-
 
             return retVal;
         }
@@ -467,11 +466,11 @@ namespace FB2Snitch.BLL
                 if (nodes.Count >= 1)
                     FB2Desc.Parse(nodes[0].ChildNodes);
                 else
-                    return (null);
+                    throw new FB2BaseException("Ошибка загрузки fb2. Элемент <description> не найден");
             }
             catch
             {
-                return (null);
+                throw new FB2BaseException("Ошибка загрузки fb2."); ;
             }
 
             return (FB2Desc);
