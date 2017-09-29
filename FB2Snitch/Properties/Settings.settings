@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FB2Snitch.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MSSQLConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Provider=Microsoft.ACE.OLEDB.12.0;User ID=Admin;Data Source=E:\testADB.mdb;Mode=ReadWrite;Persist Security Info=True</Value>
+    </Setting>
+    <Setting Name="MaxFileCountInArchive" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="BaseArcDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">E:\#StartAllOver\FB2Cataloguer</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

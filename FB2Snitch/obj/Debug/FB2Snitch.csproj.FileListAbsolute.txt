@@ -1,0 +1,9 @@
+C:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\bin\Debug\FB2Snitch.exe.config
+c:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.csprojResolveAssemblyReference.cache
+c:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.FB2SnitchForm.resources
+c:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.Properties.Resources.resources
+c:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.csproj.GenerateResource.Cache
+c:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\bin\Debug\FB2Snitch.exe
+c:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\bin\Debug\FB2Snitch.pdb
+c:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.exe
+c:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.pdb
