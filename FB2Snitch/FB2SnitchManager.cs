@@ -21,6 +21,12 @@ namespace FB2Snitch.BLL
 
     class FB2SnitchManager
     {
+        DAL.DBManager dbManager = null;
+
+        public FB2SnitchManager()
+        {
+            dbManager = new DAL.DBManager();
+        }
 
         public int AddBook(String fb2fullfilename)
         {
@@ -35,12 +41,12 @@ namespace FB2Snitch.BLL
                 //2. Подсчитали MD5-хешь сумму
                 hash = MD5Hash.GetFileHash(fb2fullfilename);
                 //3. Проверяем в DB, что такой файл еще не добавлен
-                bookid = DAL.DBManager.FindBookBy5Hash(hash);
+                bookid = dbManager.FindBookBy5Hash(hash);
                 if (bookid > -1) return bookid;
                 //4. Добавили его в архив (нашли архив в который его добавлять, сгенерировали уникальное имя, заархивировали)
                 shortarcfilename = ZipBLL.AddFile(fb2fullfilename, hash + ".fb2");
                 //5. Добавили его в DB 
-                return DAL.DBManager.AddBook(fb2desc, shortarcfilename, hash);
+                return dbManager.AddBook(fb2desc, shortarcfilename, hash);
             }
             catch (FB2BaseException ex)
             {

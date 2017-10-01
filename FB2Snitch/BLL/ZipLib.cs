@@ -119,7 +119,7 @@ namespace FB2Snitch.BLL
 
                 return (true);
             }
-            catch (Exception ex)
+            catch
             {
                 throw new FB2ZipException("Не удалось добавить файл в zip архив");
             }

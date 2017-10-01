@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
 using System.Data;
+using System.Data.SQLite;
 using System.Security.Cryptography;
 using System.IO;
 
@@ -167,7 +168,67 @@ namespace FB2Snitch.DAL
 
             return (iRet);
         }
+    }
 
+    public class AbstractTbl
+    {        
+        private SQLiteConnection m_dbConn = null;
+        private SQLiteCommand m_sqlCmd = null;
+        protected String DBTableName = String.Empty;
+
+        public AbstractTbl()
+        {
+            m_dbConn = new SQLiteConnection(Properties.Settings.Default.MSSQLConnectionString);
+            m_sqlCmd = new SQLiteCommand();
+            m_dbConn.Open();
+        }
+
+        protected void ExecuteNonQuery(string SqlRequest)
+        {
+            try
+            {
+                if (m_dbConn.State != ConnectionState.Open)
+                {
+                    m_dbConn = new SQLiteConnection(Properties.Settings.Default.MSSQLConnectionString);
+                    m_dbConn.Open();
+                }
+
+                if (m_sqlCmd == null) m_sqlCmd = new SQLiteCommand();
+
+                m_sqlCmd.Connection = m_dbConn;
+                m_sqlCmd.CommandText = SqlRequest;
+                m_sqlCmd.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+                throw new FB2DBException(String.Format("Запрос выполнился с ошибкой /n%s", ex.Message));
+            }
+        }
+
+        protected int ExecuteNonQueryAndReturnID(string SqlRequest)
+        {
+            try
+            {
+                if (m_dbConn.State != ConnectionState.Open)
+                {
+                    m_dbConn = new SQLiteConnection(Properties.Settings.Default.MSSQLConnectionString);
+                    m_dbConn.Open();
+                }
+
+                if (m_sqlCmd == null) m_sqlCmd = new SQLiteCommand();
+
+                m_sqlCmd.Connection = m_dbConn;
+                m_sqlCmd.CommandText = SqlRequest;
+                m_sqlCmd.ExecuteNonQuery();
+
+                m_sqlCmd.CommandText = "SELECT id FROM " + DBTableName + " WHERE rowid = last_insert_rowid()";
+                return (Convert.ToInt32(m_sqlCmd.ExecuteScalar()));
+            }
+            catch (SqlException ex)
+            {
+                throw new FB2DBException(String.Format("Запрос выполнился с ошибкой /n{0}", ex.Message));
+            }
+        }
     }
 
     public class CDBGenreTbl : CDBAbstractTbl
@@ -203,7 +264,7 @@ namespace FB2Snitch.DAL
                     }
                 }
             }
-            catch (Exception ex)
+            catch 
             {
                 if (mOleDbConnection != null) mOleDbConnection.Close();
                 //Ошибку обрабатываем если что...
@@ -678,6 +739,31 @@ namespace FB2Snitch.DAL
         }
     }
 
+
+    public class BookBaseTbl : AbstractTbl
+    {
+        public BookBaseTbl() : base()
+        {
+            this.DBTableName = "BookBase";
+        }
+
+        public int Insert(string BookName, string ArcFileName, string UniquiFileName, string MD5)
+        {
+            string sql_request = string.Format("INSERT INTO BookBase(BookName, ArcFileName, UniquiFileName, OriginalFileName, MD5) VALUES ('{0}','{1}','{2}','{3}')", BookName, ArcFileName, UniquiFileName, MD5);
+
+            try
+            {
+                return (this.ExecuteNonQueryAndReturnID(sql_request));
+            }
+            catch
+            {
+                throw;
+            }
+
+        }
+
+    }
+
     public class CDBookBaseTbl : CDBAbstractTbl
     {
 
@@ -867,15 +953,23 @@ namespace FB2Snitch.DAL
 
     public class DBManager 
     {
-        public static int FindBookBy5Hash(String hash)
+        BookBaseTbl tblBookBase = null;
+
+        public DBManager()
+        {
+            tblBookBase = new BookBaseTbl();
+        }
+
+        public int FindBookBy5Hash(String hash)
         {
             return -1;
         }
 
-        public static int AddBook(BLL.FB2Description fb2desc, string arcshortfilename, string hash)
+        public int AddBook(BLL.FB2Description fb2desc, string arcshortfilename, string hash)
         {
             try {
 
+                int id = tblBookBase.Insert(fb2desc.titleinfo.book_title, arcshortfilename, hash, hash);
                 return 0;
             }
             catch
@@ -883,7 +977,6 @@ namespace FB2Snitch.DAL
                 throw new FB2DBException("Не удалось сохранить книку в DB");
             }            
         }
-
     }
 
     public class CDBManager : CDBAbstractTbl
@@ -946,7 +1039,6 @@ namespace FB2Snitch.DAL
 
             return (authorlist);
         }
-
 
     }
 
