@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FB2Snitch.BLL
 {
-    //public enum ResponseStatus { Error = 0, Success };
+    public enum ResponseStatus { Error = 0, Success, FileAlreadyWasAdd };
 
     //public struct Response {
     //    public ResponseStatus status;
@@ -30,10 +30,9 @@ namespace FB2Snitch.BLL
 
         public int AddBook(String fb2fullfilename)
         {
-            string fullfilename = fb2fullfilename;
             string shortarcfilename = string.Empty;
             string hash = string.Empty;
-            int    bookid = -1;
+
             try
             {
                 //1. Проверяем что это именно fb2 файл и сваливаем если это не так
@@ -41,7 +40,7 @@ namespace FB2Snitch.BLL
                 //2. Подсчитали MD5-хешь сумму
                 hash = MD5Hash.GetFileHash(fb2fullfilename);
                 //3. Проверяем в DB, что такой файл еще не добавлен
-                bookid = dbManager.FindBookBy5Hash(hash);
+                int bookid = dbManager.IsBookHasBeenAlreadyAddedInDB(hash);
                 if (bookid > -1) return bookid;
                 //4. Добавили его в архив (нашли архив в который его добавлять, сгенерировали уникальное имя, заархивировали)
                 shortarcfilename = ZipBLL.AddFile(fb2fullfilename, hash + ".fb2");
