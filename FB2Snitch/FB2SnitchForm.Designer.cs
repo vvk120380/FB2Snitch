@@ -34,7 +34,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(674, 412);
+            this.ClientSize = new System.Drawing.Size(889, 534);
             this.Name = "FB2SnitchForm";
             this.Text = "FB2SnitchForm";
             this.ResumeLayout(false);

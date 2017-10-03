@@ -16,3 +16,4 @@ c:\Coding\FB2Snitch\FB2Snitch\bin\Debug\FB2Snitch.exe
 c:\Coding\FB2Snitch\FB2Snitch\bin\Debug\FB2Snitch.pdb
 c:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.exe
 c:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.pdb
+c:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\bin\Debug\System.Data.SQLite.dll

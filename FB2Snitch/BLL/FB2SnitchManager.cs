@@ -6,18 +6,6 @@ using System.Threading.Tasks;
 
 namespace FB2Snitch.BLL
 {
-    public enum ResponseStatus { Error = 0, Success, FileAlreadyWasAdd };
-
-    //public struct Response {
-    //    public ResponseStatus status;
-    //    public String         description;
-
-    //    public Response(ResponseStatus status, String description)
-    //    {
-    //        this.description = description;
-    //        this.status = status;
-    //    }
-    //}
 
     class FB2SnitchManager
     {
@@ -28,6 +16,11 @@ namespace FB2Snitch.BLL
             dbManager = new DAL.DBManager();
         }
 
+        /// <summary>
+        /// Добавлеяет книгу в Zip-архив и в DB
+        /// param name="fb2fullfilename" - полный путь к FB2 файлу
+        /// returns id-книги или -1 в случае если книгу уже была добавлена ранее
+        /// </summary>
         public int AddBook(String fb2fullfilename)
         {
             string shortarcfilename = string.Empty;
@@ -70,6 +63,36 @@ namespace FB2Snitch.BLL
                     throw new FB2BLLException(ex.Message + "\n" + e.Message);
                 }                
             }
+        }
+
+        public List<DAL.GenreRow> GetGenresInRoot()
+        {
+            return dbManager.GetGenresInRoot();
+        }
+
+        public List<DAL.GenreRow> GetGenresByRootId(int rootId)
+        {
+            return dbManager.GetGenresByRootId(rootId);
+        }
+
+        public List<DAL.GenreRow> GetGenresByName(String genre)
+        {
+            return dbManager.GetGenresByName(genre);
+        }
+
+        public List<DAL.GenreRow> GetGenresById(int id)
+        {
+            return dbManager.GetGenresById(id);
+        }
+
+        public List<DAL.AuthorRow> GetAuthorByGenreId(int id)
+        {
+            return dbManager.GetAuthorByGenreId(id);
+        }
+
+        public List<DAL.BookRow> GetBookByAuthorId(int id)
+        {
+            return dbManager.GetBookByAuthorId(id);
         }
     }
 }

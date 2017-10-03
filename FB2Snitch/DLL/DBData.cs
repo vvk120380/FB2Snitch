@@ -112,41 +112,43 @@ namespace FB2Snitch.DAL
             this.Id = Id;
         }
 
+        public override String ToString()
+        {
+            return String.Format("{0} ({1})", Genre_ru, Genre);
+        }
     }
 
 
     public class AbstractTbl
     {
-        private static SQLiteConnection m_dbConn = null;
-        private static SQLiteCommand m_sqlCmd = null;
         protected String DBTableName = String.Empty;
 
         public AbstractTbl()
         {
-            m_dbConn = new SQLiteConnection(Properties.Settings.Default.MSSQLConnectionString);
-            m_sqlCmd = new SQLiteCommand();
-            m_dbConn.Open();
         }
 
         protected void ExecuteNonQuery(string SqlRequest)
         {
             try
             {
-                if (m_dbConn.State != ConnectionState.Open)
+                using (SQLiteConnection m_dbConn = new SQLiteConnection(Properties.Settings.Default.MSSQLConnectionString))
                 {
-                    m_dbConn = new SQLiteConnection(Properties.Settings.Default.MSSQLConnectionString);
                     m_dbConn.Open();
+                    using (SQLiteCommand m_sqlCmd = new SQLiteCommand())
+                    {
+                        m_sqlCmd.Connection = m_dbConn;
+                        m_sqlCmd.CommandText = SqlRequest;
+                        m_sqlCmd.ExecuteNonQuery();
+                    }
                 }
-
-                if (m_sqlCmd == null) m_sqlCmd = new SQLiteCommand();
-
-                m_sqlCmd.Connection = m_dbConn;
-                m_sqlCmd.CommandText = SqlRequest;
-                m_sqlCmd.ExecuteNonQuery();
+            }
+            catch (SQLiteException ex)
+            {
+                throw new FB2DBException(String.Format("Запрос выполнился с ошибкой /n{0}", ex.Message));
             }
             catch (Exception ex)
             {
-                throw new FB2DBException(String.Format("Запрос выполнился с ошибкой /n%s", ex.Message));
+                throw new FB2DBException(ex.Message);
             }
         }
 
@@ -154,24 +156,28 @@ namespace FB2Snitch.DAL
         {
             try
             {
-                if (m_dbConn.State != ConnectionState.Open)
+                using (SQLiteConnection m_dbConn = new SQLiteConnection(Properties.Settings.Default.MSSQLConnectionString))
                 {
-                    m_dbConn = new SQLiteConnection(Properties.Settings.Default.MSSQLConnectionString);
                     m_dbConn.Open();
+                    using (SQLiteCommand m_sqlCmd = new SQLiteCommand())
+                    {
+                        m_sqlCmd.Connection = m_dbConn;
+                        m_sqlCmd.CommandText = SqlRequest;
+                        m_sqlCmd.ExecuteNonQuery();
+
+                        m_sqlCmd.CommandText = "SELECT id FROM " + DBTableName + " WHERE rowid = last_insert_rowid()";
+                        return (Convert.ToInt32(m_sqlCmd.ExecuteScalar()));
+                    }
+
                 }
-
-                if (m_sqlCmd == null) m_sqlCmd = new SQLiteCommand();
-
-                m_sqlCmd.Connection = m_dbConn;
-                m_sqlCmd.CommandText = SqlRequest;
-                m_sqlCmd.ExecuteNonQuery();
-
-                m_sqlCmd.CommandText = "SELECT id FROM " + DBTableName + " WHERE rowid = last_insert_rowid()";
-                return (Convert.ToInt32(m_sqlCmd.ExecuteScalar()));
             }
             catch (SQLiteException ex)
             {
                 throw new FB2DBException(String.Format("Запрос выполнился с ошибкой /n{0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new FB2DBException(ex.Message);
             }
         }
 
@@ -179,23 +185,25 @@ namespace FB2Snitch.DAL
         {
             try
             {
-                if (m_dbConn.State != ConnectionState.Open)
+                using (SQLiteConnection m_dbConn = new SQLiteConnection(Properties.Settings.Default.MSSQLConnectionString))
                 {
-                    m_dbConn = new SQLiteConnection(Properties.Settings.Default.MSSQLConnectionString);
                     m_dbConn.Open();
+                    using (SQLiteCommand m_sqlCmd = new SQLiteCommand())
+                    {
+                        m_sqlCmd.Connection = m_dbConn;
+                        m_sqlCmd.CommandText = SqlRequest;
+                        m_sqlCmd.CommandType = CommandType.Text;
+                        return (m_sqlCmd.ExecuteReader());
+                    }
                 }
-
-                if (m_sqlCmd == null) m_sqlCmd = new SQLiteCommand();
-
-                m_sqlCmd.Connection = m_dbConn;
-                m_sqlCmd.CommandText = SqlRequest;
-                m_sqlCmd.CommandType = CommandType.Text;
-
-                return (m_sqlCmd.ExecuteReader());
             }
             catch (SQLiteException ex)
             {
                 throw new FB2DBException(String.Format("Запрос выполнился с ошибкой /n{0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new FB2DBException(ex.Message);
             }
         }
 
@@ -209,7 +217,7 @@ namespace FB2Snitch.DAL
     {
         public BookTbl() : base()
         {
-            this.DBTableName = "Book";
+            DBTableName = "Book";
         }
 
         public BookRow Select(string MD5)
@@ -217,11 +225,13 @@ namespace FB2Snitch.DAL
             string sql_request = String.Format("SELECT * FROM {0} WHERE MD5 = '{1}'", DBTableName, MD5);
             try
             {
-                SQLiteDataReader dr = this.ExecuteReader(sql_request);
-                if (dr.HasRows)
-                    if (dr.Read())
-                        return new BookRow(toInt(dr["id"]), toText(dr["BookName"]), toText(dr["ArcFileName"]), toText(dr["MD5"]), toText(dr["Lang"]));
-                return (null);
+                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                {
+                    if (dr.HasRows)
+                        if (dr.Read())
+                            return new BookRow(toInt(dr["id"]), toText(dr["BookName"]), toText(dr["ArcFileName"]), toText(dr["MD5"]), toText(dr["Lang"]));
+                    return (null);
+                }
             }
             catch { throw; }
         }
@@ -264,11 +274,13 @@ namespace FB2Snitch.DAL
             string sql_request = String.Format("SELECT * FROM {0} WHERE {1}", DBTableName, strFields);
             try
             {
-                SQLiteDataReader dr = this.ExecuteReader(sql_request);
-                if (dr.HasRows)
-                    if (dr.Read())
-                        return new AuthorRow (toInt(dr["id"]), toText(dr["FirstName"]), toText(dr["MiddleName"]), toText(dr["LastName"]));
-                return (null);
+                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                {
+                    if (dr.HasRows)
+                        if (dr.Read())
+                            return new AuthorRow(toInt(dr["id"]), toText(dr["FirstName"]), toText(dr["MiddleName"]), toText(dr["LastName"]));
+                    return (null);
+                }
             }
             catch  { throw; }            
         }
@@ -332,11 +344,13 @@ namespace FB2Snitch.DAL
             string sql_request = String.Format("SELECT * FROM {0} WHERE BookId = {1} AND AuthorId = {2}", DBTableName, bookId, authorId);
             try
             {
-                SQLiteDataReader dr = this.ExecuteReader(sql_request);
-                if (dr.HasRows)
-                    if (dr.Read())
-                        return Convert.ToInt32(dr["id"]);
-                return (-1);
+                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                {
+                    if (dr.HasRows)
+                        if (dr.Read())
+                            return Convert.ToInt32(dr["id"]);
+                    return (-1);
+                }
             }
             catch { throw; }
         }
@@ -363,43 +377,48 @@ namespace FB2Snitch.DAL
             DBTableName = "Genre";
         }
 
-        public GenreRow Select(string genre)
+        public List<GenreRow> Select(string genre)
         {
+            List<GenreRow> rowList = new List<GenreRow>();
             string sql_request = String.Format ("SELECT * FROM {0} WHERE gener = '{1}'", DBTableName, genre);
             try
             {
-                SQLiteDataReader dr = this.ExecuteReader(sql_request);
-                if (dr.HasRows)
-                    if (dr.Read()) return new GenreRow(toInt(dr["id"]), toText(dr["Genre"]), toText(dr["Genre_ru"]), toInt(dr["root"]));
-                return (null);
+                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                {
+                    if (dr.HasRows)
+                        while (dr.Read())
+                            rowList.Add(new GenreRow(toInt(dr["id"]), toText(dr["Genre"]), toText(dr["Genre_ru"]), toInt(dr["root"])));
+                    return (rowList);
+                }
             }
             catch { throw; }
         }
 
-        public GenreRow Select(int id, bool isRoot)
+        public List<GenreRow> Select(int id, bool isRoot)
         {
+            List<GenreRow> rowList = new List<GenreRow>(); 
             string sql_request = isRoot ? 
                                  String.Format("SELECT * FROM {0} WHERE root = {1}", DBTableName, id) : 
                                  String.Format("SELECT * FROM {0} WHERE id = {1}", DBTableName, id);
-
             try
             {
-                SQLiteDataReader dr = this.ExecuteReader(sql_request);
-                if (dr.HasRows)
-                    if (dr.Read()) return new GenreRow(toInt(dr["id"]), toText(dr["Genre"]), toText(dr["Genre_ru"]), toInt(dr["root"]));
-                return (null);
+                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                {
+                    if (dr.HasRows)
+                        while (dr.Read())
+                            rowList.Add (new GenreRow(toInt(dr["id"]), toText(dr["Genre"]), toText(dr["Genre_ru"]), toInt(dr["root"])));
+                    return (rowList);
+                }
             }
             catch { throw; }
         }
 
-
         public int Insert(String genre, string genre_ru, int root)
         {
-            GenreRow row = Select(genre);
-            if (row != null) return row.Id;
+            List<GenreRow> rows = Select(genre);
+            if (rows.Count > 0) return rows[0].Id; // Это косячек, не должно быть больше одного (1 или менее элементов)
 
-            string sql_request = string.Format("INSERT INTO {0} (genre, genre_ru, root) VALUES ({1}, {2}, {3})", DBTableName, genre, genre_ru, root);
-
+            string sql_request = string.Format("INSERT INTO {0} (genre, genre_ru, root) VALUES ({1}, {2}, {3})", DBTableName, genre, genre_ru, root);        
             try
             {
                 return (this.ExecuteNonQueryAndReturnID(sql_request));
@@ -409,8 +428,8 @@ namespace FB2Snitch.DAL
 
         public int Insert(String genre)
         {
-            GenreRow row = Select(genre);
-            if (row != null) return row.Id;
+            List<GenreRow> rows = Select(genre);
+            if (rows.Count > 0) return rows[0].Id; // Это косячек, не должно быть больше одного (1 или менее элементов)
 
             string sql_request = string.Format("INSERT INTO {0} (genre, genre_ru, root) VALUES ({1}, {2}, {3})", DBTableName, genre, "", 15);
             try
@@ -433,11 +452,13 @@ namespace FB2Snitch.DAL
             string sql_request = String.Format("SELECT * FROM {0} WHERE BookId = {1} AND GenreId = {2}", DBTableName, bookId, genreId);
             try
             {
-                SQLiteDataReader dr = this.ExecuteReader(sql_request);
-                if (dr.HasRows)
-                    if (dr.Read())
-                        return Convert.ToInt32(dr["id"]);
-                return (-1);
+                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                {
+                    if (dr.HasRows)
+                        if (dr.Read())
+                            return Convert.ToInt32(dr["id"]);
+                    return (-1);
+                }
             }
             catch { throw; }
         }
@@ -458,13 +479,13 @@ namespace FB2Snitch.DAL
     }
 
 
-    public class DBManager
+    public class DBManager : AbstractTbl
     {
-        BookTbl       tblBookBase   = null;
-        AuthorTbl     tblAuthor     = null;
-        BookAuthorTbl tblBookAuthor = null;
-        GenreTbl      tblGenre      = null;
-        BookGenreTbl  tblBookGenre  = null;
+        BookTbl       tblBookBase;
+        AuthorTbl     tblAuthor;
+        BookAuthorTbl tblBookAuthor;
+        GenreTbl      tblGenre;
+        BookGenreTbl  tblBookGenre;
 
         public DBManager()
         {
@@ -508,6 +529,77 @@ namespace FB2Snitch.DAL
             {
                 throw new FB2DBException(String.Format("Не удалось сохранить книку в DB\n{0}",ex.Message));
             }
+        }
+
+        public List<GenreRow> GetGenresInRoot()
+        {
+            return GetGenresByRootId(-1);
+        }
+
+        public List<GenreRow> GetGenresByRootId(int rootId)
+        {
+            return tblGenre.Select(rootId, true);
+        }
+
+        public List<GenreRow> GetGenresByName(String genre)
+        {
+            return tblGenre.Select(genre);
+        }
+
+        public List<GenreRow> GetGenresById(int id)
+        {
+            return tblGenre.Select(id, false);
+        }
+
+        public List<AuthorRow> GetAuthorByGenreId(int id)
+        {
+            List<AuthorRow> authors = new List<AuthorRow>();
+            string sql_request = String.Format( "SELECT a.id, a.FirstName, a.MiddleName, a.LastName " +
+                                                "FROM Genre AS g " +
+                                                "JOIN BookGenre AS bg ON g.id = bg.GenreId " +
+                                                "JOIN Book AS b ON b.id = bg.BookId " +
+                                                "JOIN BookAuthor AS ba ON ba.BookId = b.id " +
+                                                "JOIN Author AS a ON ba.AuthorId = a.id " +
+                                                "WHERE g.id = {0}", id);
+            try
+            {
+                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                {
+                    if (dr.HasRows)
+                        while (dr.Read())
+                        {
+                            authors.Add(new AuthorRow(toInt(dr["id"]), toText(dr["FirstName"]), toText(dr["MiddeleName"]), toText(dr["LastName"])));
+                        }
+
+                    return (authors);
+                }
+            }
+            catch { throw; }
+        }
+
+        public List<BookRow> GetBookByAuthorId(int id)
+        {
+            List<BookRow> books = new List<BookRow>();
+
+            string sql_request = String.Format("SELECT b.id, b.BookName, b.ArcFileName, b.MD5, b.Lang " +
+                                                "FROM Author AS a " +
+                                                "JOIN BookAuthor AS ba ON ba.BookId = a.id " +
+                                                "JOIN Book AS b ON b.id = ba.BookId " +
+                                                "WHERE a.id = {0}", id);
+            try
+            {
+                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                {
+                    if (dr.HasRows)
+                        while (dr.Read())
+                        {
+                            books.Add(new BookRow(toInt(dr["id"]), toText(dr["BookName"]), toText(dr["ArcFileName"]), toText(dr["MD5"]), toText(dr["Lang"]) ));
+                        }
+
+                    return (books);
+                }
+            }
+            catch { throw; }
         }
     }
 

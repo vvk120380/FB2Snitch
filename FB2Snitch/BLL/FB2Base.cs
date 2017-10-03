@@ -126,7 +126,6 @@ namespace FB2Snitch.BLL
                                             coverpage = nImage.Attributes[i].Value;
                                             //удаляем значек # в начале
                                             if (coverpage.IndexOf("#") == 0) coverpage = coverpage.Substring(1);
-
                                         }
                                     }
 
