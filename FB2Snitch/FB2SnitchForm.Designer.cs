@@ -28,20 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.tvMain = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
+            // 
+            // tvMain
+            // 
+            this.tvMain.Location = new System.Drawing.Point(12, 12);
+            this.tvMain.Name = "tvMain";
+            this.tvMain.Size = new System.Drawing.Size(287, 464);
+            this.tvMain.TabIndex = 0;
             // 
             // FB2SnitchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(889, 534);
+            this.Controls.Add(this.tvMain);
             this.Name = "FB2SnitchForm";
             this.Text = "FB2SnitchForm";
+            this.Load += new System.EventHandler(this.FB2SnitchForm_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private System.Windows.Forms.TreeView tvMain;
     }
 }
 

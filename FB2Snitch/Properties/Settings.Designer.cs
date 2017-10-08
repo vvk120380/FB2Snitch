@@ -25,7 +25,7 @@ namespace FB2Snitch.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\"Data Source=c:\\\\Coding\\\\FB2Snitch\\\\FB2SnitchDB.db;Version=3;\"")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=c:\\Coding\\FB2Snitch\\FB2SnitchDB.db;Version=3;")]
         public string MSSQLConnectionString {
             get {
                 return ((string)(this["MSSQLConnectionString"]));

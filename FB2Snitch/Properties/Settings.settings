@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="MSSQLConnectionString" Type="System.String" Scope="User">
-      <Value Profile="(Default)">"Data Source=c:\\Coding\\FB2Snitch\\FB2SnitchDB.db;Version=3;"</Value>
+      <Value Profile="(Default)">Data Source=c:\Coding\FB2Snitch\FB2SnitchDB.db;Version=3;</Value>
     </Setting>
     <Setting Name="MaxFileCountInArchive" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">100</Value>

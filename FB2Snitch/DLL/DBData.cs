@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.Data;
+using System.Data.Common;
 
 namespace FB2Snitch.DAL
 {
@@ -181,10 +182,12 @@ namespace FB2Snitch.DAL
             }
         }
 
-        protected SQLiteDataReader ExecuteReader(string SqlRequest)
+        protected DataTable ExecuteReader(string SqlRequest)
         {
             try
             {
+                DataTable dt = new DataTable();
+
                 using (SQLiteConnection m_dbConn = new SQLiteConnection(Properties.Settings.Default.MSSQLConnectionString))
                 {
                     m_dbConn.Open();
@@ -193,7 +196,10 @@ namespace FB2Snitch.DAL
                         m_sqlCmd.Connection = m_dbConn;
                         m_sqlCmd.CommandText = SqlRequest;
                         m_sqlCmd.CommandType = CommandType.Text;
-                        return (m_sqlCmd.ExecuteReader());
+
+                        SQLiteDataReader reader = m_sqlCmd.ExecuteReader();
+                        dt.Load(reader);
+                        return (dt);
                     }
                 }
             }
@@ -225,11 +231,10 @@ namespace FB2Snitch.DAL
             string sql_request = String.Format("SELECT * FROM {0} WHERE MD5 = '{1}'", DBTableName, MD5);
             try
             {
-                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                using (DataTable dt = this.ExecuteReader(sql_request))
                 {
-                    if (dr.HasRows)
-                        if (dr.Read())
-                            return new BookRow(toInt(dr["id"]), toText(dr["BookName"]), toText(dr["ArcFileName"]), toText(dr["MD5"]), toText(dr["Lang"]));
+                    if (dt.Rows.Count > 0)
+                        return new BookRow(toInt(dt.Rows[0]["id"]), toText(dt.Rows[0]["BookName"]), toText(dt.Rows[0]["ArcFileName"]), toText(dt.Rows[0]["MD5"]), toText(dt.Rows[0]["Lang"]));
                     return (null);
                 }
             }
@@ -274,11 +279,10 @@ namespace FB2Snitch.DAL
             string sql_request = String.Format("SELECT * FROM {0} WHERE {1}", DBTableName, strFields);
             try
             {
-                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                using (DataTable dt = this.ExecuteReader(sql_request))
                 {
-                    if (dr.HasRows)
-                        if (dr.Read())
-                            return new AuthorRow(toInt(dr["id"]), toText(dr["FirstName"]), toText(dr["MiddleName"]), toText(dr["LastName"]));
+                    if(dt.Rows.Count > 0)
+                        return new AuthorRow(toInt(dt.Rows[0]["id"]), toText(dt.Rows[0]["FirstName"]), toText(dt.Rows[0]["MiddleName"]), toText(dt.Rows[0]["LastName"]));
                     return (null);
                 }
             }
@@ -344,11 +348,10 @@ namespace FB2Snitch.DAL
             string sql_request = String.Format("SELECT * FROM {0} WHERE BookId = {1} AND AuthorId = {2}", DBTableName, bookId, authorId);
             try
             {
-                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                using (DataTable dt = this.ExecuteReader(sql_request))
                 {
-                    if (dr.HasRows)
-                        if (dr.Read())
-                            return Convert.ToInt32(dr["id"]);
+                    if (dt.Rows.Count > 0)
+                        return toInt(dt.Rows[0]["id"]);
                     return (-1);
                 }
             }
@@ -383,11 +386,11 @@ namespace FB2Snitch.DAL
             string sql_request = String.Format ("SELECT * FROM {0} WHERE gener = '{1}'", DBTableName, genre);
             try
             {
-                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                using (DataTable dt = this.ExecuteReader(sql_request))
                 {
-                    if (dr.HasRows)
-                        while (dr.Read())
-                            rowList.Add(new GenreRow(toInt(dr["id"]), toText(dr["Genre"]), toText(dr["Genre_ru"]), toInt(dr["root"])));
+                    if (dt.Rows.Count > 0)
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                            rowList.Add(new GenreRow(toInt(dt.Rows[i]["id"]), toText(dt.Rows[i]["Genre"]), toText(dt.Rows[i]["Genre_ru"]), toInt(dt.Rows[i]["root"])));
                     return (rowList);
                 }
             }
@@ -402,11 +405,11 @@ namespace FB2Snitch.DAL
                                  String.Format("SELECT * FROM {0} WHERE id = {1}", DBTableName, id);
             try
             {
-                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                using (DataTable dt = this.ExecuteReader(sql_request))
                 {
-                    if (dr.HasRows)
-                        while (dr.Read())
-                            rowList.Add (new GenreRow(toInt(dr["id"]), toText(dr["Genre"]), toText(dr["Genre_ru"]), toInt(dr["root"])));
+                    if (dt.Rows.Count > 0 )
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                            rowList.Add(new GenreRow(toInt(dt.Rows[i]["id"]), toText(dt.Rows[i]["Genre"]), toText(dt.Rows[i]["Genre_ru"]), toInt(dt.Rows[i]["root"])));
                     return (rowList);
                 }
             }
@@ -452,11 +455,10 @@ namespace FB2Snitch.DAL
             string sql_request = String.Format("SELECT * FROM {0} WHERE BookId = {1} AND GenreId = {2}", DBTableName, bookId, genreId);
             try
             {
-                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                using (DataTable dt = this.ExecuteReader(sql_request))
                 {
-                    if (dr.HasRows)
-                        if (dr.Read())
-                            return Convert.ToInt32(dr["id"]);
+                    if (dt.Rows.Count > 0)
+                        return toInt(dt.Rows[0]["id"]);
                     return (-1);
                 }
             }
@@ -563,14 +565,11 @@ namespace FB2Snitch.DAL
                                                 "WHERE g.id = {0}", id);
             try
             {
-                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                using (DataTable dt = this.ExecuteReader(sql_request))
                 {
-                    if (dr.HasRows)
-                        while (dr.Read())
-                        {
-                            authors.Add(new AuthorRow(toInt(dr["id"]), toText(dr["FirstName"]), toText(dr["MiddeleName"]), toText(dr["LastName"])));
-                        }
-
+                    if (dt.Rows.Count > 0)
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                            authors.Add(new AuthorRow(toInt(dt.Rows[i]["id"]), toText(dt.Rows[i]["FirstName"]), toText(dt.Rows[i]["MiddeleName"]), toText(dt.Rows[i]["LastName"])));
                     return (authors);
                 }
             }
@@ -588,14 +587,11 @@ namespace FB2Snitch.DAL
                                                 "WHERE a.id = {0}", id);
             try
             {
-                using (SQLiteDataReader dr = this.ExecuteReader(sql_request))
+                using (DataTable dt = this.ExecuteReader(sql_request))
                 {
-                    if (dr.HasRows)
-                        while (dr.Read())
-                        {
-                            books.Add(new BookRow(toInt(dr["id"]), toText(dr["BookName"]), toText(dr["ArcFileName"]), toText(dr["MD5"]), toText(dr["Lang"]) ));
-                        }
-
+                    if(dt.Rows.Count > 0)
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                            books.Add(new BookRow(toInt(dt.Rows[i]["id"]), toText(dt.Rows[i]["BookName"]), toText(dt.Rows[i]["ArcFileName"]), toText(dt.Rows[i]["MD5"]), toText(dt.Rows[i]["Lang"])));
                     return (books);
                 }
             }
