@@ -72,6 +72,10 @@ namespace FB2Snitch.DAL
             this.Id = Id;
         }
 
+        public override string ToString()
+        {
+            return String.Format("{0} {1} {2}", FirstName, MiddleName, LastName).Replace("  ", " ").Replace("  ", " "); 
+        }
     }
 
     public class GenreRow
@@ -383,7 +387,7 @@ namespace FB2Snitch.DAL
         public List<GenreRow> Select(string genre)
         {
             List<GenreRow> rowList = new List<GenreRow>();
-            string sql_request = String.Format ("SELECT * FROM {0} WHERE gener = '{1}'", DBTableName, genre);
+            string sql_request = String.Format ("SELECT * FROM {0} WHERE genre = '{1}' ORDER BY genre_ru", DBTableName, genre);
             try
             {
                 using (DataTable dt = this.ExecuteReader(sql_request))
@@ -401,8 +405,8 @@ namespace FB2Snitch.DAL
         {
             List<GenreRow> rowList = new List<GenreRow>(); 
             string sql_request = isRoot ? 
-                                 String.Format("SELECT * FROM {0} WHERE root = {1}", DBTableName, id) : 
-                                 String.Format("SELECT * FROM {0} WHERE id = {1}", DBTableName, id);
+                                 String.Format("SELECT * FROM {0} WHERE root = {1} ORDER BY genre_ru", DBTableName, id) : 
+                                 String.Format("SELECT * FROM {0} WHERE id = {1} ORDER BY genre_ru", DBTableName, id);
             try
             {
                 using (DataTable dt = this.ExecuteReader(sql_request))
@@ -483,19 +487,19 @@ namespace FB2Snitch.DAL
 
     public class DBManager : AbstractTbl
     {
-        BookTbl       tblBookBase;
-        AuthorTbl     tblAuthor;
+        BookTbl tblBookBase;
+        AuthorTbl tblAuthor;
         BookAuthorTbl tblBookAuthor;
-        GenreTbl      tblGenre;
-        BookGenreTbl  tblBookGenre;
+        GenreTbl tblGenre;
+        BookGenreTbl tblBookGenre;
 
         public DBManager()
         {
-            tblBookBase   = new BookTbl();
-            tblAuthor     = new AuthorTbl();
+            tblBookBase = new BookTbl();
+            tblAuthor = new AuthorTbl();
             tblBookAuthor = new BookAuthorTbl();
-            tblGenre      = new GenreTbl();
-            tblBookGenre  = new BookGenreTbl();
+            tblGenre = new GenreTbl();
+            tblBookGenre = new BookGenreTbl();
         }
 
         public int IsBookHasBeenAlreadyAddedInDB(String hash)
@@ -508,7 +512,7 @@ namespace FB2Snitch.DAL
         {
             try
             {
-                BookRow  rowBook = tblBookBase.Select(hash);
+                BookRow rowBook = tblBookBase.Select(hash);
                 if (rowBook != null) return rowBook.Id;
 
                 int bookId = tblBookBase.Insert(fb2desc.titleinfo.book_title, arcshortfilename, hash, fb2desc.titleinfo.lang);
@@ -529,7 +533,7 @@ namespace FB2Snitch.DAL
             }
             catch (Exception ex)
             {
-                throw new FB2DBException(String.Format("Не удалось сохранить книку в DB\n{0}",ex.Message));
+                throw new FB2DBException(String.Format("Не удалось сохранить книку в DB\n{0}", ex.Message));
             }
         }
 
@@ -556,7 +560,7 @@ namespace FB2Snitch.DAL
         public List<AuthorRow> GetAuthorByGenreId(int id)
         {
             List<AuthorRow> authors = new List<AuthorRow>();
-            string sql_request = String.Format( "SELECT a.id, a.FirstName, a.MiddleName, a.LastName " +
+            string sql_request = String.Format("SELECT DISTINCT a.id, a.FirstName, a.MiddleName, a.LastName " +
                                                 "FROM Genre AS g " +
                                                 "JOIN BookGenre AS bg ON g.id = bg.GenreId " +
                                                 "JOIN Book AS b ON b.id = bg.BookId " +
@@ -569,7 +573,7 @@ namespace FB2Snitch.DAL
                 {
                     if (dt.Rows.Count > 0)
                         for (int i = 0; i < dt.Rows.Count; i++)
-                            authors.Add(new AuthorRow(toInt(dt.Rows[i]["id"]), toText(dt.Rows[i]["FirstName"]), toText(dt.Rows[i]["MiddeleName"]), toText(dt.Rows[i]["LastName"])));
+                            authors.Add(new AuthorRow(toInt(dt.Rows[i]["id"]), toText(dt.Rows[i]["FirstName"]), toText(dt.Rows[i]["MiddleName"]), toText(dt.Rows[i]["LastName"])));
                     return (authors);
                 }
             }
@@ -582,20 +586,41 @@ namespace FB2Snitch.DAL
 
             string sql_request = String.Format("SELECT b.id, b.BookName, b.ArcFileName, b.MD5, b.Lang " +
                                                 "FROM Author AS a " +
-                                                "JOIN BookAuthor AS ba ON ba.BookId = a.id " +
+                                                "JOIN BookAuthor AS ba ON ba.AuthorId = a.id " +
                                                 "JOIN Book AS b ON b.id = ba.BookId " +
                                                 "WHERE a.id = {0}", id);
+
             try
             {
                 using (DataTable dt = this.ExecuteReader(sql_request))
                 {
-                    if(dt.Rows.Count > 0)
+                    if (dt.Rows.Count > 0)
                         for (int i = 0; i < dt.Rows.Count; i++)
                             books.Add(new BookRow(toInt(dt.Rows[i]["id"]), toText(dt.Rows[i]["BookName"]), toText(dt.Rows[i]["ArcFileName"]), toText(dt.Rows[i]["MD5"]), toText(dt.Rows[i]["Lang"])));
                     return (books);
                 }
             }
             catch { throw; }
+        }
+
+        public bool CheckConnection()
+        {
+            try
+            {
+                using (SQLiteConnection m_dbConn = new SQLiteConnection(Properties.Settings.Default.MSSQLConnectionString))
+                {
+                    m_dbConn.Open();
+                    return m_dbConn.State == ConnectionState.Open ? true : false;
+                }
+            }
+            catch (SQLiteException ex)
+            {
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 

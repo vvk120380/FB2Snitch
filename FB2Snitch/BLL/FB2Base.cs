@@ -339,7 +339,7 @@ namespace FB2Snitch.BLL
                             XmlNodeList nLCustomInfo = nDescription.ChildNodes;
                             foreach (XmlNode nCustomInfo in nLCustomInfo)
                             {
-                                Console.WriteLine("  <" + nCustomInfo.Name + ">" + " - " + nCustomInfo.InnerText);
+                                //Console.WriteLine("  <" + nCustomInfo.Name + ">" + " - " + nCustomInfo.InnerText);
                             }
                             break;
                         }

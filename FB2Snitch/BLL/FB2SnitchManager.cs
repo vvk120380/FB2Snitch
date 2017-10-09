@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace FB2Snitch.BLL
 {
 
-    class FB2SnitchManager
+    public class FB2SnitchManager
     {
         DAL.DBManager dbManager = null;
 
@@ -16,6 +16,10 @@ namespace FB2Snitch.BLL
             dbManager = new DAL.DBManager();
         }
 
+        public bool CheckConnection()
+        {
+            return dbManager.CheckConnection();
+        }
         /// <summary>
         /// Добавлеяет книгу в Zip-архив и в DB
         /// param name="fb2fullfilename" - полный путь к FB2 файлу
@@ -94,5 +98,6 @@ namespace FB2Snitch.BLL
         {
             return dbManager.GetBookByAuthorId(id);
         }
+
     }
 }

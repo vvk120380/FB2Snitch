@@ -3,13 +3,16 @@
   <Profiles />
   <Settings>
     <Setting Name="MSSQLConnectionString" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Data Source=c:\Coding\FB2Snitch\FB2SnitchDB.db;Version=3;</Value>
+      <Value Profile="(Default)">Data Source=c:\WorkingStorage\Coding\FB2Snitch\FB2SnitchDB.db;Version=3;</Value>
     </Setting>
     <Setting Name="MaxFileCountInArchive" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="BaseArcDir" Type="System.String" Scope="User">
-      <Value Profile="(Default)">E:\#StartAllOver\FB2Cataloguer</Value>
+      <Value Profile="(Default)">c:\fb2\zip</Value>
+    </Setting>
+    <Setting Name="DBPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">c:\WorkingStorage\Coding\FB2Snitch\FB2SnitchDB.db</Value>
     </Setting>
   </Settings>
 </SettingsFile>
