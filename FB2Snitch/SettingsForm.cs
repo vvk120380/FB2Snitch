@@ -56,11 +56,20 @@ namespace FB2Snitch
         private void btnOk_Click(object sender, EventArgs e)
         {
 
-            Properties.Settings.Default.DBPath = tbDBPath.Text;
-            Properties.Settings.Default.MSSQLConnectionString = tbConnectionString.Text;
-            Properties.Settings.Default.BaseArcDir = tbArcDir.Text;
+            if (Properties.Settings.Default.DBPath.CompareTo(tbDBPath.Text) == 0 &&
+                Properties.Settings.Default.MSSQLConnectionString.CompareTo(tbConnectionString.Text) == 0 &&
+                Properties.Settings.Default.BaseArcDir.CompareTo(tbArcDir.Text) == 0)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+            else
+            {
+                Properties.Settings.Default.DBPath = tbDBPath.Text;
+                Properties.Settings.Default.MSSQLConnectionString = tbConnectionString.Text;
+                Properties.Settings.Default.BaseArcDir = tbArcDir.Text;
+                DialogResult = DialogResult.OK;
+            }
 
-            DialogResult = DialogResult.OK;
             Close();
         }
 

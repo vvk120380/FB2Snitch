@@ -52,7 +52,7 @@
             // 
             // tbDBPath
             // 
-            this.tbDBPath.BackColor = System.Drawing.Color.PapayaWhip;
+            this.tbDBPath.BackColor = System.Drawing.SystemColors.Info;
             this.tbDBPath.Location = new System.Drawing.Point(129, 9);
             this.tbDBPath.Name = "tbDBPath";
             this.tbDBPath.ReadOnly = true;
@@ -89,7 +89,7 @@
             // 
             // tbConnectionString
             // 
-            this.tbConnectionString.BackColor = System.Drawing.Color.PapayaWhip;
+            this.tbConnectionString.BackColor = System.Drawing.SystemColors.Info;
             this.tbConnectionString.Location = new System.Drawing.Point(129, 35);
             this.tbConnectionString.Name = "tbConnectionString";
             this.tbConnectionString.ReadOnly = true;
@@ -98,7 +98,7 @@
             // 
             // tbArcDir
             // 
-            this.tbArcDir.BackColor = System.Drawing.Color.PapayaWhip;
+            this.tbArcDir.BackColor = System.Drawing.SystemColors.Info;
             this.tbArcDir.Location = new System.Drawing.Point(129, 61);
             this.tbArcDir.Name = "tbArcDir";
             this.tbArcDir.ReadOnly = true;

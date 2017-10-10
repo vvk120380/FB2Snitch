@@ -74,7 +74,7 @@ namespace FB2Snitch.DAL
 
         public override string ToString()
         {
-            return String.Format("{0} {1} {2}", FirstName, MiddleName, LastName).Replace("  ", " ").Replace("  ", " "); 
+            return String.Format("{0} {1} {2}", LastName, FirstName, MiddleName ).Replace("  ", " ").Replace("  ", " "); 
         }
     }
 
@@ -145,6 +145,33 @@ namespace FB2Snitch.DAL
                         m_sqlCmd.CommandText = SqlRequest;
                         m_sqlCmd.ExecuteNonQuery();
                     }
+                }
+            }
+            catch (SQLiteException ex)
+            {
+                throw new FB2DBException(String.Format("Запрос выполнился с ошибкой /n{0}", ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new FB2DBException(ex.Message);
+            }
+        }
+
+
+        protected int ExecuteScalar(string SqlRequest)
+        {
+            try
+            {
+                using (SQLiteConnection m_dbConn = new SQLiteConnection(Properties.Settings.Default.MSSQLConnectionString))
+                {
+                    m_dbConn.Open();
+                    using (SQLiteCommand m_sqlCmd = new SQLiteCommand())
+                    {
+                        m_sqlCmd.Connection = m_dbConn;
+                        m_sqlCmd.CommandText = SqlRequest;
+                        return (Convert.ToInt32(m_sqlCmd.ExecuteScalar()));
+                    }
+
                 }
             }
             catch (SQLiteException ex)
@@ -566,7 +593,7 @@ namespace FB2Snitch.DAL
                                                 "JOIN Book AS b ON b.id = bg.BookId " +
                                                 "JOIN BookAuthor AS ba ON ba.BookId = b.id " +
                                                 "JOIN Author AS a ON ba.AuthorId = a.id " +
-                                                "WHERE g.id = {0}", id);
+                                                "WHERE g.id = {0} ORDER BY a.LastName", id);
             try
             {
                 using (DataTable dt = this.ExecuteReader(sql_request))
@@ -588,7 +615,7 @@ namespace FB2Snitch.DAL
                                                 "FROM Author AS a " +
                                                 "JOIN BookAuthor AS ba ON ba.AuthorId = a.id " +
                                                 "JOIN Book AS b ON b.id = ba.BookId " +
-                                                "WHERE a.id = {0}", id);
+                                                "WHERE a.id = {0} ORDER BY b.BookName", id);
 
             try
             {
@@ -613,15 +640,37 @@ namespace FB2Snitch.DAL
                     return m_dbConn.State == ConnectionState.Open ? true : false;
                 }
             }
-            catch (SQLiteException ex)
+            catch (SQLiteException)
             {
                 return false;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
         }
+
+        public int GetBookCount()
+        {
+            try
+            {
+                string sql_request = String.Format("SELECT DISTINCT COUNT() as BookCount FROM Book ");
+                return ExecuteScalar(sql_request);
+            }
+            catch { throw; }
+        }
+
+        public int GetAuthorCount()
+        {
+            try
+            {
+                string sql_request = String.Format("SELECT DISTINCT COUNT() as AuthorCount FROM Author");
+                return ExecuteScalar(sql_request);
+            }
+            catch { throw; }
+        }
+
+
     }
 
 }

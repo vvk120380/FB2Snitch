@@ -27,30 +27,7 @@ namespace FB2Snitch
         private void FB2SnitchForm_Load(object sender, EventArgs e)
         {
             Mng = new FB2SnitchManager();
-            bool checkSuccess = false;
-
-            while (!checkSuccess)
-                if (!FileUtils.isFileExist(Properties.Settings.Default.DBPath) || 
-                    !Mng.CheckConnection() || 
-                    !FileUtils.isFolderExists(Properties.Settings.Default.BaseArcDir))
-                {
-                    if (MessageBox.Show("При подключении в БД возникла ошибка.\nНеобходимо указать верные настройки.", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
-                    {
-                        Close();
-                        return;
-                    }
-                    else
-                    {
-                        SettingsForm settingsForm = new SettingsForm();
-                        settingsForm.ShowDialog();
-                    }
-
-                }
-                else checkSuccess = true;
-
-            Properties.Settings.Default.Save();
-
-            LoadTreeViewData();
+            changeSettingsAndUpdateControls();
         }
 
         private void LoadTreeViewData()
@@ -74,10 +51,10 @@ namespace FB2Snitch
             }
         }
 
-        private void btnAddBook_Click(object sender, EventArgs e)
+        private void UpdateStatusBar()
         {
-            ImportForm importForm = new ImportForm(Mng);
-            importForm.ShowDialog();
+            slBookCount.Text = Convert.ToString(Mng.GetBookCount());
+            slAuthorCount.Text = Convert.ToString(Mng.GetAuthorCount());
         }
 
         private void tvMain_BeforeExpand(object sender, TreeViewCancelEventArgs e)
@@ -130,6 +107,50 @@ namespace FB2Snitch
                 }
             }
 
+        }
+
+        private void menuitemImport_Click(object sender, EventArgs e)
+        {
+            ImportForm importForm = new ImportForm(Mng);
+            importForm.ShowDialog();
+        }
+
+
+        private void changeSettingsAndUpdateControls()
+        {
+            bool checkSuccess = false;
+            while (!checkSuccess)
+                if (!FileUtils.isFileExist(Properties.Settings.Default.DBPath) ||
+                    !Mng.CheckConnection() ||
+                    !FileUtils.isFolderExists(Properties.Settings.Default.BaseArcDir))
+                {
+                    if (MessageBox.Show("При подключении в БД возникла ошибка.\nНеобходимо указать верные настройки.", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
+                    {
+                        Close();
+                        return;
+                    }
+                    else
+                    {
+                        SettingsForm settingsForm = new SettingsForm();
+                        settingsForm.ShowDialog();
+                    }
+
+                }
+                else checkSuccess = true;
+
+            Properties.Settings.Default.Save();
+            LoadTreeViewData();
+            UpdateStatusBar();
+        }
+
+        private void menuitemProperties_Click(object sender, EventArgs e)
+        {
+
+            SettingsForm settingsForm = new SettingsForm();
+            DialogResult res = settingsForm.ShowDialog();
+            if (res == DialogResult.Cancel) return;
+
+            changeSettingsAndUpdateControls();
         }
     }
 }

@@ -6,7 +6,18 @@ using System.Threading.Tasks;
 
 namespace FB2Snitch.BLL
 {
+    public enum eRetError { NoErr = 0, ErrReadDesc, ErrAlreadyAdd, ErrAddToDB, ErrAddToArc, ErrMD5} 
+    public struct RetStatus
+    {
+        public eRetError error;
+        public int id;
 
+        public RetStatus(eRetError err, int id)
+        {
+            error = err;
+            this.id = id;
+        }
+    }
     public class FB2SnitchManager
     {
         DAL.DBManager dbManager = null;
@@ -20,12 +31,8 @@ namespace FB2Snitch.BLL
         {
             return dbManager.CheckConnection();
         }
-        /// <summary>
-        /// Добавлеяет книгу в Zip-архив и в DB
-        /// param name="fb2fullfilename" - полный путь к FB2 файлу
-        /// returns id-книги или -1 в случае если книгу уже была добавлена ранее
-        /// </summary>
-        public int AddBook(String fb2fullfilename)
+
+        public RetStatus AddBook(String fb2fullfilename)
         {
             string shortarcfilename = string.Empty;
             string hash = string.Empty;
@@ -38,34 +45,34 @@ namespace FB2Snitch.BLL
                 hash = MD5Hash.GetFileHash(fb2fullfilename);
                 //3. Проверяем в DB, что такой файл еще не добавлен
                 int bookid = dbManager.IsBookHasBeenAlreadyAddedInDB(hash);
-                if (bookid > -1) return bookid;
+                if (bookid > -1) return new RetStatus(eRetError.ErrAlreadyAdd, bookid);
                 //4. Добавили его в архив (нашли архив в который его добавлять, сгенерировали уникальное имя, заархивировали)
                 shortarcfilename = ZipBLL.AddFile(fb2fullfilename, hash + ".fb2");
                 //5. Добавили его в DB 
-                return dbManager.AddBook(fb2desc, shortarcfilename, hash);
+                return new RetStatus(eRetError.NoErr, dbManager.AddBook(fb2desc, shortarcfilename, hash));  
             }
-            catch (FB2BaseException ex)
+            catch (FB2BaseException)
             {
-                throw new FB2BLLException(ex.Message);
+                return new RetStatus(eRetError.ErrReadDesc, -1);
             }
-            catch (FB2MD5HashException ex)
+            catch (FB2MD5HashException)
             {
-                throw new FB2BLLException(ex.Message);
+                return new RetStatus(eRetError.ErrMD5, -1);
             }
-            catch (FB2ZipException ex)
+            catch (FB2ZipException)
             {
-                throw new FB2BLLException(ex.Message);
+                return new RetStatus(eRetError.ErrAddToArc, -1);
             }
-            catch (FB2DBException ex)
+            catch (FB2DBException)
             {
                 try {
                     ZipBLL.DeleteFile(shortarcfilename, hash + ".fb2");
-                    return -1;
+                    return new RetStatus(eRetError.ErrAddToDB, -1);
                 }
-                catch (FB2ZipException e)
+                catch (FB2ZipException)
                 {
-                    throw new FB2BLLException(ex.Message + "\n" + e.Message);
-                }                
+                    return new RetStatus(eRetError.ErrAddToArc, -1);
+                }
             }
         }
 
@@ -99,5 +106,13 @@ namespace FB2Snitch.BLL
             return dbManager.GetBookByAuthorId(id);
         }
 
+        public int GetBookCount()
+        {
+            return dbManager.GetBookCount();
+        }
+        public int GetAuthorCount()
+        {
+            return dbManager.GetAuthorCount();
+        }
     }
 }
