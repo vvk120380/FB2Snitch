@@ -60,7 +60,7 @@ namespace FB2Snitch.BLL
             {
                 try {
                     ZipBLL.DeleteFile(shortarcfilename, hash + ".fb2");
-                    throw;
+                    return -1;
                 }
                 catch (FB2ZipException e)
                 {

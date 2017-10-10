@@ -27,18 +27,29 @@ namespace FB2Snitch
         private void FB2SnitchForm_Load(object sender, EventArgs e)
         {
             Mng = new FB2SnitchManager();
+            bool checkSuccess = false;
 
-            if (!FileUtils.isFileExist(Properties.Settings.Default.DBPath))
-            {
-                MessageBox.Show("По указанному пути БД не найдена", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Close();
-            }
+            while (!checkSuccess)
+                if (!FileUtils.isFileExist(Properties.Settings.Default.DBPath) || 
+                    !Mng.CheckConnection() || 
+                    !FileUtils.isFolderExists(Properties.Settings.Default.BaseArcDir))
+                {
+                    if (MessageBox.Show("При подключении в БД возникла ошибка.\nНеобходимо указать верные настройки.", "Ошибка", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
+                    {
+                        Close();
+                        return;
+                    }
+                    else
+                    {
+                        SettingsForm settingsForm = new SettingsForm();
+                        settingsForm.ShowDialog();
+                    }
 
-            if (!Mng.CheckConnection())
-            {
-                MessageBox.Show("Не удалось подключиться к БД", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Close();
-            }
+                }
+                else checkSuccess = true;
+
+            Properties.Settings.Default.Save();
+
             LoadTreeViewData();
         }
 

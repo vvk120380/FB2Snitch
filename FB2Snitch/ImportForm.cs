@@ -31,8 +31,8 @@ namespace FB2Snitch
         private void btnSelectPath_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
-            //fbd.RootFolder = Environment.SpecialFolder.Personal;
             fbd.ShowNewFolderButton = false;
+            fbd.RootFolder = Environment.SpecialFolder.MyComputer;
 
             if (fbd.ShowDialog() != DialogResult.OK) return;
 
@@ -87,7 +87,8 @@ namespace FB2Snitch
     {
         public static string AddFile(BLL.FB2SnitchManager Mng, string fn)
         {
-            return String.Format("Добавлен id = {0}", Mng.AddBook(fn));
+            int id = Mng.AddBook(fn);
+            return id == -1 ? String.Format("Ошибка") : String.Format("Добавлен id = {0}", id);
         }
     }
 
