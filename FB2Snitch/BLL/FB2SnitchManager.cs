@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FB2Snitch.BLL
 {
-    public enum eRetError { NoErr = 0, ErrReadDesc, ErrAlreadyAdd, ErrAddToDB, ErrAddToArc, ErrMD5} 
+    public enum eRetError { NoErr = 0, ErrReadDesc, ErrAlreadyAdd, ErrAddToDB, ErrAddToArc, ErrMD5, ErrDelFile} 
     public struct RetStatus
     {
         public eRetError error;

@@ -44,5 +44,16 @@ namespace FB2Snitch.BLL
             return (Directory.Exists(dir));
         }
         #endregion
+
+        public static bool DeleteFile(string path)
+        {
+            try
+            {
+                File.SetAttributes(path, FileAttributes.Normal);
+                File.Delete(path);
+                return true;
+            }
+            catch { return false; }            
+        }
     }
 }

@@ -41,7 +41,7 @@
             this.slStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.slProgress = new System.Windows.Forms.ToolStripStatusLabel();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.cbAutoDelete = new System.Windows.Forms.CheckBox();
             this.btnStop = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -159,15 +159,15 @@
             this.slProgress.Size = new System.Drawing.Size(124, 17);
             this.slProgress.Text = "10000 из 10000 (100%)";
             // 
-            // checkBox1
+            // cbAutoDelete
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(20, 335);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(273, 17);
-            this.checkBox1.TabIndex = 8;
-            this.checkBox1.Text = "Автоматически удалять файлы после обработки";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.cbAutoDelete.AutoSize = true;
+            this.cbAutoDelete.Location = new System.Drawing.Point(20, 335);
+            this.cbAutoDelete.Name = "cbAutoDelete";
+            this.cbAutoDelete.Size = new System.Drawing.Size(458, 17);
+            this.cbAutoDelete.TabIndex = 8;
+            this.cbAutoDelete.Text = "Автоматически удалять успешно обработанные файлы (вновь и ранее добавленные)";
+            this.cbAutoDelete.UseVisualStyleBackColor = true;
             // 
             // btnStop
             // 
@@ -185,7 +185,7 @@
             this.ClientSize = new System.Drawing.Size(624, 380);
             this.ControlBox = false;
             this.Controls.Add(this.btnStop);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.cbAutoDelete);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnStart);
@@ -222,7 +222,7 @@
         private System.Windows.Forms.ToolStripStatusLabel slStatus;
         private System.Windows.Forms.ToolStripStatusLabel slProgress;
         private System.Windows.Forms.ToolStripProgressBar tsProgress;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox cbAutoDelete;
         private System.Windows.Forms.Button btnStop;
     }
 }
