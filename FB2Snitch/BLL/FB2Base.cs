@@ -467,8 +467,9 @@ namespace FB2Snitch.BLL
                 else
                     throw new FB2BaseException("Ошибка загрузки fb2. Элемент <description> не найден");
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine(String.Format("ERROR! {0} - {1}", filename, ex.Message));
                 throw new FB2BaseException("Ошибка загрузки fb2."); ;
             }
 

@@ -12,7 +12,6 @@ C:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\bin\Debug\System.Data.SQLite.dll
 C:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\bin\Debug\System.Data.SQLite.pdb
 C:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\bin\Debug\System.Data.SQLite.xml
 C:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.ImportForm.resources
-C:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.csprojResolveAssemblyReference.cache
 C:\Coding\FB2Snitch\FB2Snitch\bin\Debug\FB2Snitch.exe.config
 C:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.exe
 C:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.pdb

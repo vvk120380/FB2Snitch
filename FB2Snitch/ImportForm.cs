@@ -28,9 +28,8 @@ namespace FB2Snitch
             tsProgress.Maximum = 100;
             tsProgress.Step = 1;
             tsProgress.Value = 0;
-            slProgress.Text = "0 из 100";
+            slProgress.Text = "0 из 0";
             slStatus.Text = "Ожидание обработки";
-            //lRet.Text = String.Format("Всего обработано {0} из {1}", 0, 0);
         }
 
         private void btnSelectPath_Click(object sender, EventArgs e)
@@ -85,14 +84,15 @@ namespace FB2Snitch
                         ((BLL.RetStatus)lvFiles.Items[i].Tag).error == BLL.eRetError.ErrAlreadyAdd)
                     {
                         UpadateStatusBarValues(iTotal - i, iTotal, "Удаление");
-                        if (!BLL.FileUtils.DeleteFile(string.Format("{0}\\{1}", tbPath.Text, lvFiles.Items[i].SubItems[0].Text)))
+                        string path = String.Format("{0}\\{1}", tbPath.Text, lvFiles.Items[i].SubItems[0].Text);
+                        bool isDelete = await Task.Factory.StartNew<bool>(() => Worker.DeleteFile(path), TaskCreationOptions.LongRunning);
+                        if (!isDelete)
                         {
                             lvFiles.Items[i].SubItems[1].Text = "Ошибка удаления файла";
                             lvFiles.Items[i].Tag = new BLL.RetStatus(BLL.eRetError.ErrDelFile, ((BLL.RetStatus)lvFiles.Items[i].Tag).id);
                         }
                         else
-                            lvFiles.Items[i].Remove();
-
+                            lvFiles.Items[i].Remove();                        
                     }
 
             UpadateStatusBarValues(iCurr, iTotal, "Обработка завершена");
@@ -142,6 +142,11 @@ namespace FB2Snitch
         public static BLL.RetStatus AddFile(BLL.FB2SnitchManager Mng, string fn)
         {
             return Mng.AddBook(fn);
+        }
+
+        public static bool DeleteFile(string fn)
+        {
+            return BLL.FileUtils.DeleteFile(fn);
         }
 
 

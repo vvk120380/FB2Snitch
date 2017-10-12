@@ -28,6 +28,8 @@ namespace FB2Snitch
         {
             Mng = new FB2SnitchManager();
             changeSettingsAndUpdateControls();
+            splitContainer1.Panel1MinSize = 300;
+            splitContainer1.Panel2MinSize = 400;
         }
 
         private void LoadTreeViewData()
@@ -152,5 +154,6 @@ namespace FB2Snitch
 
             changeSettingsAndUpdateControls();
         }
+
     }
 }

@@ -184,7 +184,9 @@ namespace FB2Snitch.DAL
             }
         }
 
-        protected int ExecuteNonQueryAndReturnID(string SqlRequest)
+
+
+        protected int ExecuteNonQueryAndReturnID(string SqlRequest, List<SQLiteParameter> parameters)
         {
             try
             {
@@ -195,8 +197,9 @@ namespace FB2Snitch.DAL
                     {
                         m_sqlCmd.Connection = m_dbConn;
                         m_sqlCmd.CommandText = SqlRequest;
+                        if (parameters != null)
+                            m_sqlCmd.Parameters.AddRange(parameters.ToArray());
                         m_sqlCmd.ExecuteNonQuery();
-
                         m_sqlCmd.CommandText = "SELECT id FROM " + DBTableName + " WHERE rowid = last_insert_rowid()";
                         return (Convert.ToInt32(m_sqlCmd.ExecuteScalar()));
                     }
@@ -274,10 +277,18 @@ namespace FB2Snitch.DAL
 
         public int Insert(string BookName, string ArcFileName, string MD5, string Lang)
         {
-            string sql_request = string.Format("INSERT INTO {0} (BookName, ArcFileName, MD5, Lang) VALUES ('{1}','{2}','{3}','{4}')", DBTableName, BookName, ArcFileName, MD5, Lang);
+            string sql_request = string.Format("INSERT INTO {0} (BookName, ArcFileName, MD5, Lang) VALUES (@BookName, @ArcFileName, @MD5, @Lang)", DBTableName);
+            List<SQLiteParameter> parameters = new List<SQLiteParameter>()
+            {
+                new SQLiteParameter("@BookName", BookName),
+                new SQLiteParameter("@ArcFileName", ArcFileName),
+                new SQLiteParameter("@MD5", MD5),
+                new SQLiteParameter("@Lang", Lang)
+            };
+            
             try
             {
-                return (this.ExecuteNonQueryAndReturnID(sql_request));
+                return (this.ExecuteNonQueryAndReturnID(sql_request, parameters));
             }
             catch { throw; }
         }
@@ -356,7 +367,7 @@ namespace FB2Snitch.DAL
 
             try
             {
-                return (this.ExecuteNonQueryAndReturnID(sql_request));
+                return (this.ExecuteNonQueryAndReturnID(sql_request, null));
             }
             catch
             {
@@ -394,10 +405,16 @@ namespace FB2Snitch.DAL
             int iRet = Select(bookId, authorId);
             if (iRet > 0) return iRet;
 
-            string sql_request = string.Format("INSERT INTO {0}(BookId, AuthorId) VALUES ({1}, {2})",DBTableName, bookId, authorId);
+            string sql_request = string.Format("INSERT INTO {0}(BookId, AuthorId) VALUES (@BookId, @AuthorId)", DBTableName);
+            List<SQLiteParameter> parameters = new List<SQLiteParameter>()
+            {
+                new SQLiteParameter("@bookId", bookId),
+                new SQLiteParameter("@authorId", authorId)
+            };
+
             try
             {
-                return (this.ExecuteNonQueryAndReturnID(sql_request));
+                return (this.ExecuteNonQueryAndReturnID(sql_request, parameters));
             }
             catch { throw; }
 
@@ -452,10 +469,17 @@ namespace FB2Snitch.DAL
             List<GenreRow> rows = Select(genre);
             if (rows.Count > 0) return rows[0].Id; // Это косячек, не должно быть больше одного (1 или менее элементов)
 
-            string sql_request = string.Format("INSERT INTO {0} (genre, genre_ru, root) VALUES ({1}, {2}, {3})", DBTableName, genre, genre_ru, root);        
+            string sql_request = string.Format("INSERT INTO {0} (genre, genre_ru, root) VALUES (@genre, @genre_ru, @root)", DBTableName);
+            List<SQLiteParameter> parameters = new List<SQLiteParameter>()
+            {
+                new SQLiteParameter("@genre", genre),
+                new SQLiteParameter("@genre_ru", genre_ru),
+                new SQLiteParameter("@root", root)
+            };
+
             try
             {
-                return (this.ExecuteNonQueryAndReturnID(sql_request));
+                return (this.ExecuteNonQueryAndReturnID(sql_request, parameters));
             }
             catch { throw; }
         }
@@ -465,10 +489,17 @@ namespace FB2Snitch.DAL
             List<GenreRow> rows = Select(genre);
             if (rows.Count > 0) return rows[0].Id; // Это косячек, не должно быть больше одного (1 или менее элементов)
 
-            string sql_request = string.Format("INSERT INTO {0} (genre, genre_ru, root) VALUES ({1}, {2}, {3})", DBTableName, genre, "", 15);
+            string sql_request = string.Format("INSERT INTO {0} (genre, genre_ru, root) VALUES (@genre, @genre_ru, @root)", DBTableName);
+            List<SQLiteParameter> parameters = new List<SQLiteParameter>()
+            {
+                new SQLiteParameter("@genre", genre),
+                new SQLiteParameter("@genre_ru", ""),
+                new SQLiteParameter("@root", 15)
+            };
+
             try
             {
-                return (this.ExecuteNonQueryAndReturnID(sql_request));
+                return (this.ExecuteNonQueryAndReturnID(sql_request, parameters));
             }
             catch { throw; }
         }
@@ -501,10 +532,16 @@ namespace FB2Snitch.DAL
             int iRet = Select(bookId, genreId);
             if (iRet > 0) return iRet;
 
-            string sql_request = string.Format("INSERT INTO {0}(BookId, GenreId) VALUES ({1}, {2})",DBTableName, bookId, genreId);
+            string sql_request = string.Format("INSERT INTO {0}(BookId, GenreId) VALUES (@bookId, @genreId)", DBTableName);
+            List<SQLiteParameter> pasrameters = new List<SQLiteParameter>()
+            {
+                new SQLiteParameter("@bookId", bookId),
+                new SQLiteParameter("@genreId", genreId)
+            };
+
             try
             {
-                return (this.ExecuteNonQueryAndReturnID(sql_request));
+                return (this.ExecuteNonQueryAndReturnID(sql_request, pasrameters));
             }
             catch { throw; }
 
