@@ -644,6 +644,29 @@ namespace FB2Snitch.DAL
             catch { throw; }
         }
 
+        public List<AuthorRow> GetAuthorByGenreId(int id, string lang)
+        {
+            List<AuthorRow> authors = new List<AuthorRow>();
+            string sql_request = String.Format("SELECT DISTINCT a.id, a.FirstName, a.MiddleName, a.LastName " +
+                                                "FROM Genre AS g " +
+                                                "JOIN BookGenre AS bg ON g.id = bg.GenreId " +
+                                                "JOIN Book AS b ON b.id = bg.BookId " +
+                                                "JOIN BookAuthor AS ba ON ba.BookId = b.id " +
+                                                "JOIN Author AS a ON ba.AuthorId = a.id " +
+                                                "WHERE g.id = {0} and b.lang = '{1}' ORDER BY a.LastName", id, lang);
+            try
+            {
+                using (DataTable dt = this.ExecuteReader(sql_request))
+                {
+                    if (dt.Rows.Count > 0)
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                            authors.Add(new AuthorRow(toInt(dt.Rows[i]["id"]), toText(dt.Rows[i]["FirstName"]), toText(dt.Rows[i]["MiddleName"]), toText(dt.Rows[i]["LastName"])));
+                    return (authors);
+                }
+            }
+            catch { throw; }
+        }
+
         public List<BookRow> GetBookByAuthorId(int id)
         {
             List<BookRow> books = new List<BookRow>();
@@ -707,7 +730,23 @@ namespace FB2Snitch.DAL
             catch { throw; }
         }
 
+        public List<Tuple<int, string>> GetLanguages()
+        {
+            List<Tuple<int, string>> langs = new List<Tuple<int, string>>();
+            string sql_request = String.Format("SELECT Lang, count(id) as Count FROM Book GROUP BY Lang");
 
+            try
+            {
+                using (DataTable dt = this.ExecuteReader(sql_request))
+                {
+                    if (dt.Rows.Count > 0)
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                            langs.Add(Tuple.Create(toInt(dt.Rows[i]["Count"]), toText(dt.Rows[i]["Lang"])));
+                    return (langs);
+                }
+            }
+            catch { throw; }
+        }
     }
 
 }

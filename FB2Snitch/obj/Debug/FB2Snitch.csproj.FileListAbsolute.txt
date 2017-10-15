@@ -20,10 +20,10 @@ C:\Coding\FB2Snitch\FB2Snitch\bin\Debug\FB2Snitch.pdb
 C:\Coding\FB2Snitch\FB2Snitch\bin\Debug\Microsoft.QualityTools.Testing.Fakes.dll
 C:\Coding\FB2Snitch\FB2Snitch\bin\Debug\System.Data.SQLite.dll
 C:\Coding\FB2Snitch\FB2Snitch\bin\Debug\System.Data.SQLite.xml
-C:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.csprojResolveAssemblyReference.cache
 C:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.FB2SnitchForm.resources
 C:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.ImportForm.resources
 C:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.Properties.Resources.resources
 C:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.csproj.GenerateResource.Cache
 C:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.SettingsForm.resources
 C:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.SettingsForm.resources
+C:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.csprojResolveAssemblyReference.cache

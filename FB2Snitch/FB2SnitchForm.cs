@@ -30,6 +30,14 @@ namespace FB2Snitch
             changeSettingsAndUpdateControls();
             splitContainer1.Panel1MinSize = 300;
             splitContainer1.Panel2MinSize = 400;
+
+
+            ilMain.Images.Add(Properties.Resources.genre_root);
+            ilMain.Images.Add(Properties.Resources.genre);
+            ilMain.Images.Add(Properties.Resources.personal);
+            ilMain.Images.Add(Properties.Resources.book);
+            tvMain.ImageList = ilMain;
+
         }
 
         private void LoadTreeViewData()
@@ -40,15 +48,9 @@ namespace FB2Snitch
             {
                 TreeNode tn = new TreeNode(gr.Genre_ru);
                 tn.Tag = gr.Id;
-
-                List<GenreRow> geners = Mng.GetGenresByRootId(gr.Id);
-                foreach (GenreRow gi in geners)
-                {
-                    TreeNode tni = new TreeNode(gi.Genre_ru);
-                    tni.Tag = gi.Id;
-                    tni.Nodes.Add("@@dummnynode@@");
-                    tn.Nodes.Add(tni);
-                }
+                tn.ImageIndex = 0;
+                tn.SelectedImageIndex = 0;
+                tn.Nodes.Add("@@dummnynode@@");
                 tvMain.Nodes.Add(tn);
             }
         }
@@ -59,29 +61,52 @@ namespace FB2Snitch
             slAuthorCount.Text = Convert.ToString(Mng.GetAuthorCount());
         }
 
+        private void LoadLanguages()
+        {
+            var langs = Mng.GetLanguages().OrderByDescending(x => x.Item1).ToList<Tuple<int, String>>();
+            tsLangCB.Items.Clear();
+
+            foreach (Tuple<int, String> lang in langs)
+                tsLangCB.Items.Add(String.Format("{1}", lang.Item1, lang.Item2));
+            tsLangCB.SelectedIndex = 0;
+        }
+
         private void tvMain_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
             if (e.Node.Level == (int)TVLEVELS.GenreRoot)
             {
+                if (e.Node.Nodes.Count == 1 && e.Node.Nodes[0].Text == "@@dummnynode@@")
+                {
+                    List<GenreRow> geners = Mng.GetGenresByRootId((int)e.Node.Tag);
+                    if (geners.Count == 0) { e.Cancel = true; return; }
+                    e.Node.Nodes.Clear();
 
+                    foreach (GenreRow gi in geners)
+                    {
+                        TreeNode tni = new TreeNode(gi.Genre_ru);
+                        tni.Tag = gi.Id;
+                        tni.ImageIndex = 1;
+                        tni.SelectedImageIndex = 1;
+                        tni.Nodes.Add("@@dummnynode@@");
+                        e.Node.Nodes.Add(tni);
+                    }
+                }
             }
             else
             if (e.Node.Level == (int)TVLEVELS.Genre)
             {
                 if (e.Node.Nodes.Count == 1 && e.Node.Nodes[0].Text == "@@dummnynode@@")
                 {
-                    List<AuthorRow> authers = Mng.GetAuthorByGenreId((int)e.Node.Tag);
-                    if (authers.Count == 0)
-                    {
-                        e.Cancel = true;
-                        return;
-                    }
-
+                    List<AuthorRow> authers = Mng.GetAuthorByGenreId((int)e.Node.Tag, tsLangCB.Text);
+                    if (authers.Count == 0) { e.Cancel = true; return; }
                     e.Node.Nodes.Clear();
+
                     foreach (AuthorRow author in authers)
                     {
                         TreeNode tni = new TreeNode(author.ToString());
                         tni.Tag = author.Id;
+                        tni.ImageIndex = 2;
+                        tni.SelectedImageIndex = 2;
                         tni.Nodes.Add("@@dummnynode@@");
                         e.Node.Nodes.Add(tni);
                     }
@@ -93,17 +118,15 @@ namespace FB2Snitch
                 if (e.Node.Nodes.Count == 1 && e.Node.Nodes[0].Text == "@@dummnynode@@")
                 {
                     List<BookRow> books = Mng.GetBookByAuthorId((int)e.Node.Tag);
-                    if (books.Count == 0)
-                    {
-                        e.Cancel = true;
-                        return;
-                    }
-
+                    if (books.Count == 0) { e.Cancel = true; return; }
                     e.Node.Nodes.Clear();
+
                     foreach (BookRow book in books)
                     {
                         TreeNode tni = new TreeNode(book.BookName);
                         tni.Tag = book.Id;
+                        tni.ImageIndex = 3;
+                        tni.SelectedImageIndex = 3;
                         e.Node.Nodes.Add(tni);
                     }
                 }
@@ -139,8 +162,8 @@ namespace FB2Snitch
 
                 }
                 else checkSuccess = true;
-
             Properties.Settings.Default.Save();
+            LoadLanguages();
             LoadTreeViewData();
             UpdateStatusBar();
         }
@@ -155,5 +178,30 @@ namespace FB2Snitch
             changeSettingsAndUpdateControls();
         }
 
+        private void tvMain_AfterCollapse(object sender, TreeViewEventArgs e)
+        {
+            //if (e.Node.Level == (int)TVLEVELS.GenreRoot)
+            //{
+            //}
+            //else
+            //if (e.Node.Level == (int)TVLEVELS.Genre)
+            //{
+            //    if (e.Node.Nodes.Count > 0)
+            //    {
+            //        e.Node.Nodes.Clear();
+            //        e.Node.Nodes.Add("@@dummnynode@@");
+            //    }
+            //}
+            //else
+            //if (e.Node.Level == (int)TVLEVELS.Author)
+            //{
+            //    if (e.Node.Nodes.Count > 0)
+            //    {
+            //        e.Node.Nodes.Clear();
+            //        e.Node.Nodes.Add("@@dummnynode@@");
+            //    }
+            //}
+
+        }
     }
 }

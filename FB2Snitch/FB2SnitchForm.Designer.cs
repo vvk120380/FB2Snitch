@@ -28,13 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FB2SnitchForm));
             this.tvMain = new System.Windows.Forms.TreeView();
             this.ssMain = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.slBookCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.slAuthorCount = new System.Windows.Forms.ToolStripStatusLabel();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuMain = new System.Windows.Forms.MenuStrip();
             this.actionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuitemImport = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,11 +44,18 @@
             this.menuitemAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.tsLangCB = new System.Windows.Forms.ToolStripComboBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.ilMain = new System.Windows.Forms.ImageList(this.components);
             this.ssMain.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
+            this.menuMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tvMain
@@ -54,8 +63,9 @@
             this.tvMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvMain.Location = new System.Drawing.Point(0, 0);
             this.tvMain.Name = "tvMain";
-            this.tvMain.Size = new System.Drawing.Size(303, 683);
+            this.tvMain.Size = new System.Drawing.Size(303, 654);
             this.tvMain.TabIndex = 0;
+            this.tvMain.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tvMain_AfterCollapse);
             this.tvMain.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvMain_BeforeExpand);
             // 
             // ssMain
@@ -103,17 +113,17 @@
             this.slAuthorCount.Text = "1000000";
             this.slAuthorCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // menuStrip1
+            // menuMain
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.actionsToolStripMenuItem,
             this.settingsToolStripMenuItem,
             this.menuitemAbout});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1008, 24);
-            this.menuStrip1.TabIndex = 3;
-            this.menuStrip1.Text = "menuStrip1";
+            this.menuMain.Location = new System.Drawing.Point(0, 0);
+            this.menuMain.Name = "menuMain";
+            this.menuMain.Size = new System.Drawing.Size(1008, 24);
+            this.menuMain.TabIndex = 3;
+            this.menuMain.Text = "menuStrip1";
             // 
             // actionsToolStripMenuItem
             // 
@@ -163,7 +173,7 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 24);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -174,29 +184,79 @@
             // 
             this.splitContainer1.Panel2.AutoScroll = true;
             this.splitContainer1.Panel2.AutoScrollMinSize = new System.Drawing.Size(100, 100);
-            this.splitContainer1.Size = new System.Drawing.Size(1008, 683);
+            this.splitContainer1.Size = new System.Drawing.Size(1004, 654);
             this.splitContainer1.SplitterDistance = 303;
             this.splitContainer1.TabIndex = 7;
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel1,
+            this.tsLangCB});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(1008, 25);
+            this.toolStrip1.TabIndex = 8;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.AutoSize = false;
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(50, 22);
+            this.toolStripLabel1.Text = "Язык:";
+            this.toolStripLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // tsLangCB
+            // 
+            this.tsLangCB.AutoSize = false;
+            this.tsLangCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.tsLangCB.Items.AddRange(new object[] {
+            "Ru",
+            "En"});
+            this.tsLangCB.Name = "tsLangCB";
+            this.tsLangCB.Size = new System.Drawing.Size(50, 23);
+            // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.splitContainer1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 49);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1008, 658);
+            this.panel1.TabIndex = 9;
+            // 
+            // ilMain
+            // 
+            this.ilMain.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.ilMain.ImageSize = new System.Drawing.Size(16, 16);
+            this.ilMain.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // FB2SnitchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1008, 729);
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.ssMain);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
+            this.Controls.Add(this.menuMain);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuMain;
             this.Name = "FB2SnitchForm";
-            this.Text = "FB2SnitchForm";
+            this.Text = "FB2 Snitch";
             this.Load += new System.EventHandler(this.FB2SnitchForm_Load);
             this.ssMain.ResumeLayout(false);
             this.ssMain.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.menuMain.ResumeLayout(false);
+            this.menuMain.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -207,8 +267,9 @@
         private System.Windows.Forms.TreeView tvMain;
         private System.Windows.Forms.StatusStrip ssMain;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripStatusLabel slBookCount;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menuMain;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripStatusLabel slAuthorCount;
         private System.Windows.Forms.ToolStripMenuItem actionsToolStripMenuItem;
@@ -218,6 +279,10 @@
         private System.Windows.Forms.ToolStripMenuItem menuitemAbout;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStripComboBox tsLangCB;
+        private System.Windows.Forms.ImageList ilMain;
     }
 }
 

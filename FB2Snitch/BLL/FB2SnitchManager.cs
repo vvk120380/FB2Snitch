@@ -76,6 +76,11 @@ namespace FB2Snitch.BLL
             }
         }
 
+        public List<Tuple<int, string>> GetLanguages()
+        {
+            return dbManager.GetLanguages();
+        }
+
         public List<DAL.GenreRow> GetGenresInRoot()
         {
             return dbManager.GetGenresInRoot();
@@ -99,6 +104,11 @@ namespace FB2Snitch.BLL
         public List<DAL.AuthorRow> GetAuthorByGenreId(int id)
         {
             return dbManager.GetAuthorByGenreId(id);
+        }
+
+        public List<DAL.AuthorRow> GetAuthorByGenreId(int id, string lang)
+        {
+            return dbManager.GetAuthorByGenreId(id, lang);
         }
 
         public List<DAL.BookRow> GetBookByAuthorId(int id)

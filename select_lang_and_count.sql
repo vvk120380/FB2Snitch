@@ -1,0 +1,1 @@
+select Lang, count (id) as Count From Book group by Lang
