@@ -16,7 +16,7 @@ namespace FB2Snitch
     {
         BLL.FB2SnitchManager Mng = null;
 
-        enum TVLEVELS { GenreRoot = 0, Genre = 1, Author = 2 };
+        enum TVLEVELS { GenreRoot = 0, Genre = 1, Author = 2, Book = 3 };
               
 
         public FB2SnitchForm()
@@ -83,7 +83,11 @@ namespace FB2Snitch
 
                     foreach (GenreRow gi in geners)
                     {
-                        TreeNode tni = new TreeNode(gi.Genre_ru);
+                        // Добавлять жанр только, если есть авторы с соответствующим языком
+                        int count = Mng.GetAuthorCountByGenreId(gi.Id, tsLangCB.Text);
+                        if (count == 0) continue;
+
+                        TreeNode tni = new TreeNode(String.Format("{0} ({1})", String.IsNullOrEmpty(gi.Genre_ru) ? gi.Genre : gi.Genre_ru, count));
                         tni.Tag = gi.Id;
                         tni.ImageIndex = 1;
                         tni.SelectedImageIndex = 1;
@@ -131,6 +135,11 @@ namespace FB2Snitch
                     }
                 }
             }
+            //else
+            //if (e.Node.Level == (int)TVLEVELS.Book)
+            //{
+
+            //}
 
         }
 
@@ -180,28 +189,14 @@ namespace FB2Snitch
 
         private void tvMain_AfterCollapse(object sender, TreeViewEventArgs e)
         {
-            //if (e.Node.Level == (int)TVLEVELS.GenreRoot)
-            //{
-            //}
-            //else
-            //if (e.Node.Level == (int)TVLEVELS.Genre)
-            //{
-            //    if (e.Node.Nodes.Count > 0)
-            //    {
-            //        e.Node.Nodes.Clear();
-            //        e.Node.Nodes.Add("@@dummnynode@@");
-            //    }
-            //}
-            //else
-            //if (e.Node.Level == (int)TVLEVELS.Author)
-            //{
-            //    if (e.Node.Nodes.Count > 0)
-            //    {
-            //        e.Node.Nodes.Clear();
-            //        e.Node.Nodes.Add("@@dummnynode@@");
-            //    }
-            //}
+        }
 
+        private void tvMain_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node.Level == (int)TVLEVELS.Book)
+            {
+
+            }
         }
     }
 }

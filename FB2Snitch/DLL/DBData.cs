@@ -667,6 +667,25 @@ namespace FB2Snitch.DAL
             catch { throw; }
         }
 
+        public int GetAuthorCountByGenreId(int id, string lang)
+        {
+            string sql_request = String.Format("SELECT DISTINCT a.id, a.FirstName, a.MiddleName, a.LastName " +
+                                                "FROM Genre AS g " +
+                                                "JOIN BookGenre AS bg ON g.id = bg.GenreId " +
+                                                "JOIN Book AS b ON b.id = bg.BookId " +
+                                                "JOIN BookAuthor AS ba ON ba.BookId = b.id " +
+                                                "JOIN Author AS a ON ba.AuthorId = a.id " +
+                                                "WHERE g.id = {0} and b.lang = '{1}' ORDER BY a.LastName", id, lang); try
+            {
+                using (DataTable dt = this.ExecuteReader(sql_request))
+                {
+                        return (dt.Rows.Count);
+                }
+            }
+            catch { throw; }
+        }
+
+
         public List<BookRow> GetBookByAuthorId(int id)
         {
             List<BookRow> books = new List<BookRow>();
