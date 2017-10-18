@@ -121,6 +121,11 @@ namespace FB2Snitch.BLL
             return dbManager.GetBookByAuthorId(id);
         }
 
+        public DAL.BookRow GetBookById(int id)
+        {
+            return dbManager.GetBookById(id);
+        }
+
         public int GetBookCount()
         {
             return dbManager.GetBookCount();

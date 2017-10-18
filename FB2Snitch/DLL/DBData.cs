@@ -708,6 +708,20 @@ namespace FB2Snitch.DAL
             }
             catch { throw; }
         }
+        public BookRow GetBookById(int id)
+        {
+            List<BookRow> books = new List<BookRow>();
+
+            string sql_request = String.Format("SELECT * FROM Book WHERE id = {0}", id);
+
+            try
+            {
+                using (DataTable dt = this.ExecuteReader(sql_request))
+                    return (dt.Rows.Count > 0) ? new BookRow(toInt(dt.Rows[0]["id"]), toText(dt.Rows[0]["BookName"]), toText(dt.Rows[0]["ArcFileName"]), toText(dt.Rows[0]["MD5"]), toText(dt.Rows[0]["Lang"])) : null;
+            }
+            catch { throw; }
+        }
+
 
         public bool CheckConnection()
         {

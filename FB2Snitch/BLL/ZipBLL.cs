@@ -91,11 +91,7 @@ namespace FB2Snitch.BLL
 
                     int currarcnum = -1;
                     if(Int32.TryParse(shotfilename,System.Globalization.NumberStyles.HexNumber,new System.Globalization.CultureInfo("en-US"), out currarcnum))
-                    {
-                        if (currarcnum > maxacrnum)
-                            maxacrnum = currarcnum;
-                    }
-
+                        if (currarcnum > maxacrnum) maxacrnum = currarcnum;
                 }
             }
             catch 
@@ -106,5 +102,10 @@ namespace FB2Snitch.BLL
             return (maxacrnum);
         }
         #endregion
+
+        public static bool ExtractFile(string arc_name, string filename, string tmppath) {
+            if (System.IO.File.Exists(tmppath + "\\" + filename)) return true;
+            return ZipLib.ExtractFile(arc_name, filename, tmppath);
+        }
     }
 }

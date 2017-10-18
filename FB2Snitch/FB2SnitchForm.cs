@@ -195,7 +195,13 @@ namespace FB2Snitch
         {
             if (e.Node.Level == (int)TVLEVELS.Book)
             {
+                BookRow row = Mng.GetBookById((int)e.Node.Tag);
+                if (row == null) return;
 
+                string arc_name = String.Format("{0}\\{1}", Properties.Settings.Default.BaseArcDir, row.ArcFileName);
+                string file_name = String.Format("{0}.fb2", row.MD5);
+                string tmppath = @"d:\1";
+                ZipBLL.ExtractFile(arc_name, file_name, tmppath);
             }
         }
     }
