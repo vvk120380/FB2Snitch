@@ -180,8 +180,10 @@ namespace FB2Snitch.BLL
         static public bool ExtractFile(string arc_name, string filename, string tmppath)
         {
             ZipArchiveMode zip_mode = ZipArchiveMode.Read;
-            if (!File.Exists(arc_name))
-                throw new FB2ZipException(String.Format("Файл <%s> не найден", arc_name));
+
+            if (!File.Exists(arc_name)) 
+                throw new FB2ZipException(String.Format("Файл <{0}> не найден", arc_name));
+ 
             try
             {
                 using (ZipArchive archive = ZipFile.Open(arc_name, zip_mode, Encoding.GetEncoding("cp866")))
@@ -190,11 +192,11 @@ namespace FB2Snitch.BLL
                     IEnumerable<ZipArchiveEntry> query = archive.Entries.Where(q => q.Name == filename);
                     List<ZipArchiveEntry> list = query.ToList<ZipArchiveEntry>();
                     for (int i = 0; i < list.Count; i++) list[i].ExtractToFile(String.Format("{0}//{1}", tmppath, filename));
+                    return (true);
                 }
             }
-            catch { throw new FB2ZipException("Не удалось извлечь файл из zip архива"); }
+            catch { throw new FB2ZipException(String.Format("Не удалось извлечь файл <{0}> из архива <{1}>", filename, arc_name)); }
 
-            return (true);
         }
         #endregion
     }

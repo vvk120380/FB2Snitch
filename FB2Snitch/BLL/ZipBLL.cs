@@ -105,7 +105,14 @@ namespace FB2Snitch.BLL
 
         public static bool ExtractFile(string arc_name, string filename, string tmppath) {
             if (System.IO.File.Exists(tmppath + "\\" + filename)) return true;
-            return ZipLib.ExtractFile(arc_name, filename, tmppath);
+            try
+            {
+                return ZipLib.ExtractFile(arc_name, filename, tmppath);
+            }
+            catch(FB2ZipException)
+            {
+                throw;
+            }
         }
     }
 }

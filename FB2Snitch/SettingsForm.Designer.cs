@@ -39,6 +39,9 @@
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnTmpDir = new System.Windows.Forms.Button();
+            this.tbTmpDir = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lDBPath
@@ -117,7 +120,7 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(347, 101);
+            this.btnOk.Location = new System.Drawing.Point(347, 128);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 8;
@@ -127,7 +130,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(428, 101);
+            this.btnCancel.Location = new System.Drawing.Point(428, 128);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 9;
@@ -137,18 +140,49 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Location = new System.Drawing.Point(2, 87);
+            this.groupBox1.Location = new System.Drawing.Point(2, 114);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(509, 4);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             // 
+            // btnTmpDir
+            // 
+            this.btnTmpDir.Location = new System.Drawing.Point(456, 86);
+            this.btnTmpDir.Name = "btnTmpDir";
+            this.btnTmpDir.Size = new System.Drawing.Size(47, 23);
+            this.btnTmpDir.TabIndex = 13;
+            this.btnTmpDir.Text = "<<<";
+            this.btnTmpDir.UseVisualStyleBackColor = true;
+            this.btnTmpDir.Click += new System.EventHandler(this.btnTmpDir_Click);
+            // 
+            // tbTmpDir
+            // 
+            this.tbTmpDir.BackColor = System.Drawing.SystemColors.Info;
+            this.tbTmpDir.Location = new System.Drawing.Point(129, 87);
+            this.tbTmpDir.Name = "tbTmpDir";
+            this.tbTmpDir.ReadOnly = true;
+            this.tbTmpDir.Size = new System.Drawing.Size(320, 20);
+            this.tbTmpDir.TabIndex = 12;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(5, 91);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(123, 13);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Темповая директория:";
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(515, 132);
+            this.ClientSize = new System.Drawing.Size(515, 159);
             this.ControlBox = false;
+            this.Controls.Add(this.btnTmpDir);
+            this.Controls.Add(this.tbTmpDir);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
@@ -183,5 +217,8 @@
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button btnTmpDir;
+        private System.Windows.Forms.TextBox tbTmpDir;
+        private System.Windows.Forms.Label label1;
     }
 }

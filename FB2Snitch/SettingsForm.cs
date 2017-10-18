@@ -53,12 +53,24 @@ namespace FB2Snitch
             tbArcDir.Text = fbd.SelectedPath;
         }
 
+        private void btnTmpDir_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.ShowNewFolderButton = false;
+            fbd.RootFolder = Environment.SpecialFolder.MyComputer;
+
+            if (fbd.ShowDialog() != DialogResult.OK) return;
+
+            tbTmpDir.Text = fbd.SelectedPath;
+        }
+
         private void btnOk_Click(object sender, EventArgs e)
         {
 
             if (Properties.Settings.Default.DBPath.CompareTo(tbDBPath.Text) == 0 &&
                 Properties.Settings.Default.MSSQLConnectionString.CompareTo(tbConnectionString.Text) == 0 &&
-                Properties.Settings.Default.BaseArcDir.CompareTo(tbArcDir.Text) == 0)
+                Properties.Settings.Default.BaseArcDir.CompareTo(tbArcDir.Text) == 0 &&
+                Properties.Settings.Default.TemDir.CompareTo(tbTmpDir.Text) == 0)
             {
                 DialogResult = DialogResult.Cancel;
             }
@@ -67,6 +79,7 @@ namespace FB2Snitch
                 Properties.Settings.Default.DBPath = tbDBPath.Text;
                 Properties.Settings.Default.MSSQLConnectionString = tbConnectionString.Text;
                 Properties.Settings.Default.BaseArcDir = tbArcDir.Text;
+                Properties.Settings.Default.TemDir = tbTmpDir.Text;
                 DialogResult = DialogResult.OK;
             }
 

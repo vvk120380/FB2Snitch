@@ -27,3 +27,4 @@ C:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.csproj.GenerateResource.Cache
 C:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.SettingsForm.resources
 C:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.SettingsForm.resources
 C:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.csprojResolveAssemblyReference.cache
+C:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.csprojResolveAssemblyReference.cache

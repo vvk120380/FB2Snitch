@@ -200,8 +200,19 @@ namespace FB2Snitch
 
                 string arc_name = String.Format("{0}\\{1}", Properties.Settings.Default.BaseArcDir, row.ArcFileName);
                 string file_name = String.Format("{0}.fb2", row.MD5);
-                string tmppath = @"d:\1";
-                ZipBLL.ExtractFile(arc_name, file_name, tmppath);
+                string tmppath = Properties.Settings.Default.TemDir;
+                try
+                {
+                    ZipBLL.ExtractFile(arc_name, file_name, tmppath);
+                    BLL.FB2Description fb2Desc = BLL.FB2Manager.ReadDecription(String.Format("{0}\\{1}", tmppath, file_name));
+                    BLL.FB2Binary fb2Bin = BLL.FB2Manager.ReadBinary(String.Format("{0}\\{1}", tmppath, file_name));
+                }
+                catch (FB2ZipException ex)
+                {
+                    MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+
             }
         }
     }

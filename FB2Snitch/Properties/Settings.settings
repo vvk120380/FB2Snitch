@@ -14,5 +14,8 @@
     <Setting Name="DBPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">c:\WorkingStorage\Coding\FB2Snitch\FB2SnitchDB.db</Value>
     </Setting>
+    <Setting Name="TemDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">c:\3 </Value>
+    </Setting>
   </Settings>
 </SettingsFile>

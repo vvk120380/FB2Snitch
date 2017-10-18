@@ -70,5 +70,17 @@ namespace FB2Snitch.Properties {
                 this["DBPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\3 ")]
+        public string TemDir {
+            get {
+                return ((string)(this["TemDir"]));
+            }
+            set {
+                this["TemDir"] = value;
+            }
+        }
     }
 }
