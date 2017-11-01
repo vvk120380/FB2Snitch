@@ -60,7 +60,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UIL\AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UIL\AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="BLL\FB2Base.cs" />
+    <Compile Include="BLL\ImageLib.cs" />
     <Compile Include="DLL\DBData.cs" />
     <Compile Include="FB2Exceptions.cs" />
     <Compile Include="BLL\FB2SnitchManager.cs" />
@@ -69,30 +76,39 @@
     <Compile Include="BLL\ZipBLL.cs" />
     <Compile Include="BLL\ZipLib.cs" />
     <Compile Include="DLL\DBDataClasses.cs" />
-    <Compile Include="FB2SnitchForm.cs">
+    <Compile Include="UIL\FB2SnitchForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FB2SnitchForm.Designer.cs">
+    <Compile Include="UIL\FB2SnitchForm.Designer.cs">
       <DependentUpon>FB2SnitchForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImportForm.cs">
+    <Compile Include="UIL\ImportForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ImportForm.Designer.cs">
+    <Compile Include="UIL\ImportForm.Designer.cs">
       <DependentUpon>ImportForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettingsForm.cs">
+    <Compile Include="UIL\SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsForm.Designer.cs">
+    <Compile Include="UIL\SettingsForm.Designer.cs">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="FB2SnitchForm.resx">
+    <Compile Include="UIL\VerifyDBForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UIL\VerifyDBForm.Designer.cs">
+      <DependentUpon>VerifyDBForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="UIL\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UIL\FB2SnitchForm.resx">
       <DependentUpon>FB2SnitchForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ImportForm.resx">
+    <EmbeddedResource Include="UIL\ImportForm.resx">
       <DependentUpon>ImportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -105,8 +121,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="SettingsForm.resx">
+    <EmbeddedResource Include="UIL\SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UIL\VerifyDBForm.resx">
+      <DependentUpon>VerifyDBForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -127,6 +146,8 @@
     <None Include="ResImages\personal.png" />
     <None Include="ResImages\genre.png" />
     <None Include="ResImages\book.png" />
+    <None Include="ResImages\emptybook.png" />
+    <None Include="ResImages\Book_main.png" />
     <Content Include="Resources\book.png" />
     <Content Include="Resources\genre.png" />
     <Content Include="Resources\personal.png" />

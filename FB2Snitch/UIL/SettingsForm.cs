@@ -22,6 +22,7 @@ namespace FB2Snitch
             tbDBPath.Text = Properties.Settings.Default.DBPath;
             tbConnectionString.Text = Properties.Settings.Default.MSSQLConnectionString;
             tbArcDir.Text = Properties.Settings.Default.BaseArcDir;
+            tbTmpDir.Text = Properties.Settings.Default.TemDir;
         }
 
         private void btnDBDir_Click(object sender, EventArgs e)

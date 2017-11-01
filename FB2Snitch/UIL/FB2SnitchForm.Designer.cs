@@ -49,13 +49,19 @@
             this.tsLangCB = new System.Windows.Forms.ToolStripComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.ilMain = new System.Windows.Forms.ImageList(this.components);
+            this.panelBookInfo = new System.Windows.Forms.Panel();
+            this.pbti_coverpage = new System.Windows.Forms.PictureBox();
+            this.verifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ssMain.SuspendLayout();
             this.menuMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.panelBookInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbti_coverpage)).BeginInit();
             this.SuspendLayout();
             // 
             // tvMain
@@ -63,7 +69,7 @@
             this.tvMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvMain.Location = new System.Drawing.Point(0, 0);
             this.tvMain.Name = "tvMain";
-            this.tvMain.Size = new System.Drawing.Size(303, 654);
+            this.tvMain.Size = new System.Drawing.Size(303, 719);
             this.tvMain.TabIndex = 0;
             this.tvMain.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tvMain_AfterCollapse);
             this.tvMain.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvMain_BeforeExpand);
@@ -76,9 +82,9 @@
             this.slBookCount,
             this.toolStripStatusLabel2,
             this.slAuthorCount});
-            this.ssMain.Location = new System.Drawing.Point(0, 707);
+            this.ssMain.Location = new System.Drawing.Point(0, 772);
             this.ssMain.Name = "ssMain";
-            this.ssMain.Size = new System.Drawing.Size(1008, 22);
+            this.ssMain.Size = new System.Drawing.Size(1168, 22);
             this.ssMain.TabIndex = 2;
             this.ssMain.Text = "statusStrip1";
             // 
@@ -122,14 +128,15 @@
             this.menuitemAbout});
             this.menuMain.Location = new System.Drawing.Point(0, 0);
             this.menuMain.Name = "menuMain";
-            this.menuMain.Size = new System.Drawing.Size(1008, 24);
+            this.menuMain.Size = new System.Drawing.Size(1168, 24);
             this.menuMain.TabIndex = 3;
             this.menuMain.Text = "menuStrip1";
             // 
             // actionsToolStripMenuItem
             // 
             this.actionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuitemImport});
+            this.menuitemImport,
+            this.verifyToolStripMenuItem});
             this.actionsToolStripMenuItem.Name = "actionsToolStripMenuItem";
             this.actionsToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.actionsToolStripMenuItem.Text = "Actions";
@@ -137,7 +144,7 @@
             // menuitemImport
             // 
             this.menuitemImport.Name = "menuitemImport";
-            this.menuitemImport.Size = new System.Drawing.Size(110, 22);
+            this.menuitemImport.Size = new System.Drawing.Size(152, 22);
             this.menuitemImport.Text = "Import";
             this.menuitemImport.Click += new System.EventHandler(this.menuitemImport_Click);
             // 
@@ -167,8 +174,9 @@
             // aboutToolStripMenuItem1
             // 
             this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem1.Text = "About";
+            this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
             // 
             // splitContainer1
             // 
@@ -185,7 +193,8 @@
             // 
             this.splitContainer1.Panel2.AutoScroll = true;
             this.splitContainer1.Panel2.AutoScrollMinSize = new System.Drawing.Size(100, 100);
-            this.splitContainer1.Size = new System.Drawing.Size(1004, 654);
+            this.splitContainer1.Panel2.Controls.Add(this.panelBookInfo);
+            this.splitContainer1.Size = new System.Drawing.Size(1164, 719);
             this.splitContainer1.SplitterDistance = 303;
             this.splitContainer1.TabIndex = 7;
             // 
@@ -196,7 +205,7 @@
             this.tsLangCB});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1008, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1168, 25);
             this.toolStrip1.TabIndex = 8;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -225,7 +234,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 49);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1008, 658);
+            this.panel1.Size = new System.Drawing.Size(1168, 723);
             this.panel1.TabIndex = 9;
             // 
             // ilMain
@@ -234,11 +243,38 @@
             this.ilMain.ImageSize = new System.Drawing.Size(16, 16);
             this.ilMain.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // panelBookInfo
+            // 
+            this.panelBookInfo.Controls.Add(this.pbti_coverpage);
+            this.panelBookInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelBookInfo.Location = new System.Drawing.Point(0, 0);
+            this.panelBookInfo.Name = "panelBookInfo";
+            this.panelBookInfo.Size = new System.Drawing.Size(857, 719);
+            this.panelBookInfo.TabIndex = 5;
+            this.panelBookInfo.Paint += new System.Windows.Forms.PaintEventHandler(this.panelBookInfo_Paint);
+            // 
+            // pbti_coverpage
+            // 
+            this.pbti_coverpage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbti_coverpage.Location = new System.Drawing.Point(13, 15);
+            this.pbti_coverpage.Name = "pbti_coverpage";
+            this.pbti_coverpage.Size = new System.Drawing.Size(260, 346);
+            this.pbti_coverpage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbti_coverpage.TabIndex = 0;
+            this.pbti_coverpage.TabStop = false;
+            // 
+            // verifyToolStripMenuItem
+            // 
+            this.verifyToolStripMenuItem.Name = "verifyToolStripMenuItem";
+            this.verifyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.verifyToolStripMenuItem.Text = "Verify";
+            this.verifyToolStripMenuItem.Click += new System.EventHandler(this.verifyToolStripMenuItem_Click);
+            // 
             // FB2SnitchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 729);
+            this.ClientSize = new System.Drawing.Size(1168, 794);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.ssMain);
@@ -253,11 +289,14 @@
             this.menuMain.ResumeLayout(false);
             this.menuMain.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
+            this.panelBookInfo.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbti_coverpage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -284,6 +323,9 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripComboBox tsLangCB;
         private System.Windows.Forms.ImageList ilMain;
+        private System.Windows.Forms.PictureBox pbti_coverpage;
+        private System.Windows.Forms.Panel panelBookInfo;
+        private System.Windows.Forms.ToolStripMenuItem verifyToolStripMenuItem;
     }
 }
 

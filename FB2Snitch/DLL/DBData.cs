@@ -708,6 +708,30 @@ namespace FB2Snitch.DAL
             }
             catch { throw; }
         }
+
+        public List<BookRow> GetBookByAuthorId(int id, string lang)
+        {
+            List<BookRow> books = new List<BookRow>();
+
+            string sql_request = String.Format("SELECT b.id, b.BookName, b.ArcFileName, b.MD5, b.Lang " +
+                                                "FROM Author AS a " +
+                                                "JOIN BookAuthor AS ba ON ba.AuthorId = a.id " +
+                                                "JOIN Book AS b ON b.id = ba.BookId " +
+                                                "WHERE a.id = {0} AND b.Lang = '{1}' ORDER BY b.BookName", id, lang);
+
+            try
+            {
+                using (DataTable dt = this.ExecuteReader(sql_request))
+                {
+                    if (dt.Rows.Count > 0)
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                            books.Add(new BookRow(toInt(dt.Rows[i]["id"]), toText(dt.Rows[i]["BookName"]), toText(dt.Rows[i]["ArcFileName"]), toText(dt.Rows[i]["MD5"]), toText(dt.Rows[i]["Lang"])));
+                    return (books);
+                }
+            }
+            catch { throw; }
+        }
+
         public BookRow GetBookById(int id)
         {
             List<BookRow> books = new List<BookRow>();

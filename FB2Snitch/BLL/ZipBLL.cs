@@ -8,7 +8,6 @@ namespace FB2Snitch.BLL
 {
     class ZipBLL
     {
-
         #region [AddFb2ToZipArchive] Добавляет файл в архив и возвращает имя архива в который он добавлен или String.Empty в случае ошибки
         /// <summary>
         /// Добавляет файл в архив и возвращает имя архива в который он добавлен или String.Empty в случае ошибки
@@ -103,6 +102,7 @@ namespace FB2Snitch.BLL
         }
         #endregion
 
+        #region [ExtractFile] Извлекает файлы из архива в заданную директорию
         public static bool ExtractFile(string arc_name, string filename, string tmppath) {
             if (System.IO.File.Exists(tmppath + "\\" + filename)) return true;
             try
@@ -114,5 +114,6 @@ namespace FB2Snitch.BLL
                 throw;
             }
         }
+        #endregion
     }
 }

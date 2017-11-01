@@ -191,6 +191,7 @@ namespace FB2Snitch.BLL
                     FileInfo fi = new FileInfo(filename);
                     IEnumerable<ZipArchiveEntry> query = archive.Entries.Where(q => q.Name == filename);
                     List<ZipArchiveEntry> list = query.ToList<ZipArchiveEntry>();
+                    if (list.Count == 0) return (false);
                     for (int i = 0; i < list.Count; i++) list[i].ExtractToFile(String.Format("{0}//{1}", tmppath, filename));
                     return (true);
                 }
