@@ -115,5 +115,21 @@ namespace FB2Snitch.BLL
             }
         }
         #endregion
+
+        #region [IsFilePresent] Проверяет что зананый файл присутствует в архиве
+        public static bool IsFilePresent(string arc_name, string filename, string tmppath)
+        {
+            if (System.IO.File.Exists(tmppath + "\\" + filename)) return true;
+            try
+            {
+                return ZipLib.IsFilePresent(arc_name, filename, tmppath);
+            }
+            catch (FB2ZipException)
+            {
+                throw;
+            }
+        }
+        #endregion
+
     }
 }

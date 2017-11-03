@@ -25,11 +25,7 @@ namespace FB2Snitch
 
         private void ImportForm_Load(object sender, EventArgs e)
         {
-            tsProgress.Maximum = 100;
-            tsProgress.Step = 1;
-            tsProgress.Value = 0;
-            slProgress.Text = "0 из 0";
-            slStatus.Text = "Ожидание обработки";
+            UpdateStatusBarValues(0, 0, "Ожидание обработки...");
         }
 
         private void btnSelectPath_Click(object sender, EventArgs e)
@@ -42,8 +38,8 @@ namespace FB2Snitch
 
             tbPath.Text = fbd.SelectedPath;
             string[] flist = BLL.FileUtils.GetFileList(fbd.SelectedPath);
-            slProgress.Text = String.Format("({0} из {1})", 0, flist.Length);
-            slStatus.Text = "Ожидание обработки";
+
+            UpdateStatusBarValues(0, 0, "Ожидание обработки...");
 
             lvFiles.Items.Clear();
             lvFiles.BeginUpdate();
@@ -65,25 +61,25 @@ namespace FB2Snitch
             int iTotal = lvFiles.Items.Count;
             int iCurr = 0;
 
-            UpadateStatusBarValues(iCurr, iTotal, "Обработка");
-            UpadateBtnEnableStatus(false, false, false);
+            UpdateStatusBarValues(iCurr, iTotal, "Обработка");
+            UpdateBtnEnableStatus(false, false, false);
 
             foreach (ListViewItem lvi in lvFiles.Items)
             {
                 iCurr++;
                 BLL.RetStatus status = await Task.Factory.StartNew<BLL.RetStatus>(() => Worker.AddFile(Mng, String.Format("{0}\\{1}", tbPath.Text, lvi.SubItems[0].Text)), TaskCreationOptions.LongRunning);
                 UpadateListViewItem(lvi, status);
-                UpadateStatusBarValues(iCurr, iTotal, "Обработка");                
+                UpdateStatusBarValues(iCurr, iTotal, "Обработка");                
                 lvFiles.EnsureVisible(lvi.Index); // Автоматический скрол до выбранного элемента
             }
 
-            UpadateStatusBarValues(iCurr, iTotal, "Удаление");
+            UpdateStatusBarValues(iCurr, iTotal, "Удаление");
             if (cbAutoDelete.Checked)
                 for (int i = lvFiles.Items.Count - 1; i >= 0; i--)
                     if (((BLL.RetStatus)lvFiles.Items[i].Tag).error == BLL.eRetError.NoErr ||
                         ((BLL.RetStatus)lvFiles.Items[i].Tag).error == BLL.eRetError.ErrAlreadyAdd)
                     {
-                        UpadateStatusBarValues(iTotal - i, iTotal, "Удаление");
+                        UpdateStatusBarValues(iTotal - i, iTotal, "Удаление");
                         string path = String.Format("{0}\\{1}", tbPath.Text, lvFiles.Items[i].SubItems[0].Text);
                         bool isDelete = await Task.Factory.StartNew<bool>(() => Worker.DeleteFile(path), TaskCreationOptions.LongRunning);
                         if (!isDelete)
@@ -95,8 +91,8 @@ namespace FB2Snitch
                             lvFiles.Items[i].Remove();                        
                     }
 
-            UpadateStatusBarValues(iCurr, iTotal, "Обработка завершена");
-            UpadateBtnEnableStatus(true, true, true);
+            UpdateStatusBarValues(iCurr, iTotal, "Обработка завершена");
+            UpdateBtnEnableStatus(true, true, true);
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -104,7 +100,7 @@ namespace FB2Snitch
             Close();
         }
 
-        private void UpadateStatusBarValues(int curr, int total, string status)
+        private void UpdateStatusBarValues(int curr, int total, string status)
         {
             slStatus.Text = status;
             slProgress.Text = String.Format("({0} из {1})", curr, total);
@@ -113,7 +109,7 @@ namespace FB2Snitch
             tsProgress.Value = curr;
         }
 
-        private void UpadateBtnEnableStatus(bool сlose, bool start, bool path)
+        private void UpdateBtnEnableStatus(bool сlose, bool start, bool path)
         {
             btnClose.Enabled = сlose;
             btnStart.Enabled = start;
@@ -134,6 +130,7 @@ namespace FB2Snitch
             }
             lvi.Tag = status;
         }
+
     }
 
 
@@ -148,8 +145,6 @@ namespace FB2Snitch
         {
             return BLL.FileUtils.DeleteFile(fn);
         }
-
-
     }
 
 

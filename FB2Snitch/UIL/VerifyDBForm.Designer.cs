@@ -28,31 +28,49 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.lvFiles = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.slStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.slProgress = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsError = new System.Windows.Forms.ToolStripStatusLabel();
             this.btnFind = new System.Windows.Forms.Button();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnClose = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // listView1
+            // lvFiles
             // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lvFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
-            this.listView1.Location = new System.Drawing.Point(12, 12);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(600, 287);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
+            this.lvFiles.Location = new System.Drawing.Point(12, 12);
+            this.lvFiles.Name = "lvFiles";
+            this.lvFiles.Size = new System.Drawing.Size(600, 310);
+            this.lvFiles.TabIndex = 0;
+            this.lvFiles.UseCompatibleStateImageBehavior = false;
+            this.lvFiles.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Наименование книги";
+            this.columnHeader1.Width = 216;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Имя архива";
+            this.columnHeader2.Width = 179;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "MD5";
+            this.columnHeader3.Width = 179;
             // 
             // statusStrip1
             // 
@@ -60,7 +78,8 @@
             this.toolStripStatusLabel1,
             this.slStatus,
             this.tsProgress,
-            this.slProgress});
+            this.slProgress,
+            this.tsError});
             this.statusStrip1.Location = new System.Drawing.Point(0, 358);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(624, 22);
@@ -78,7 +97,7 @@
             this.slStatus.AutoSize = false;
             this.slStatus.Name = "slStatus";
             this.slStatus.Size = new System.Drawing.Size(130, 17);
-            this.slStatus.Text = "Ожидает обработки";
+            this.slStatus.Text = "Ожидает обработки...";
             this.slStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tsProgress
@@ -93,33 +112,49 @@
             // 
             this.slProgress.AutoSize = false;
             this.slProgress.Name = "slProgress";
-            this.slProgress.Size = new System.Drawing.Size(136, 17);
+            this.slProgress.Size = new System.Drawing.Size(145, 17);
             this.slProgress.Text = "100000 из 100000 (100%)";
+            this.slProgress.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tsError
+            // 
+            this.tsError.AutoSize = false;
+            this.tsError.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.tsError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.tsError.Name = "tsError";
+            this.tsError.Size = new System.Drawing.Size(100, 17);
+            this.tsError.Text = "123";
+            this.tsError.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnFind
             // 
-            this.btnFind.Location = new System.Drawing.Point(12, 315);
+            this.btnFind.Location = new System.Drawing.Point(12, 328);
             this.btnFind.Name = "btnFind";
-            this.btnFind.Size = new System.Drawing.Size(182, 23);
+            this.btnFind.Size = new System.Drawing.Size(75, 23);
             this.btnFind.TabIndex = 2;
-            this.btnFind.Text = "Поиск несвязанных данных";
+            this.btnFind.Text = "Find";
             this.btnFind.UseVisualStyleBackColor = true;
             this.btnFind.Click += new System.EventHandler(this.btnFind_Click);
             // 
-            // columnHeader1
+            // btnClose
             // 
-            this.columnHeader1.Text = "Наименование книги";
-            this.columnHeader1.Width = 216;
+            this.btnClose.Location = new System.Drawing.Point(536, 328);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(75, 23);
+            this.btnClose.TabIndex = 3;
+            this.btnClose.Text = "Close";
+            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
-            // columnHeader2
+            // btnDelete
             // 
-            this.columnHeader2.Text = "Имя архива";
-            this.columnHeader2.Width = 179;
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "MD5";
-            this.columnHeader3.Width = 179;
+            this.btnDelete.Location = new System.Drawing.Point(102, 328);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(75, 23);
+            this.btnDelete.TabIndex = 5;
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // VerifyDBForm
             // 
@@ -127,9 +162,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(624, 380);
             this.ControlBox = false;
+            this.Controls.Add(this.btnDelete);
+            this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnFind);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.lvFiles);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -137,6 +174,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Верификация данных";
+            this.Load += new System.EventHandler(this.VerifyDBForm_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -146,7 +184,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView lvFiles;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel slStatus;
@@ -156,5 +194,8 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.ToolStripStatusLabel tsError;
+        private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Button btnDelete;
     }
 }

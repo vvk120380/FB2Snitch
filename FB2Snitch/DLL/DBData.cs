@@ -132,7 +132,7 @@ namespace FB2Snitch.DAL
         {
         }
 
-        protected void ExecuteNonQuery(string SqlRequest)
+        protected int ExecuteNonQuery(string SqlRequest)
         {
             try
             {
@@ -143,7 +143,7 @@ namespace FB2Snitch.DAL
                     {
                         m_sqlCmd.Connection = m_dbConn;
                         m_sqlCmd.CommandText = SqlRequest;
-                        m_sqlCmd.ExecuteNonQuery();
+                        return (m_sqlCmd.ExecuteNonQuery());
                     }
                 }
             }
@@ -260,6 +260,38 @@ namespace FB2Snitch.DAL
             DBTableName = "Book";
         }
 
+        public List<BookRow> Select()
+        {
+            List<BookRow> books = new List<BookRow>();
+
+            string sql_request = String.Format("SELECT * FROM Book");
+
+            try
+            {
+                using (DataTable dt = this.ExecuteReader(sql_request))
+                {
+                    if (dt.Rows.Count > 0)
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                            books.Add(new BookRow(toInt(dt.Rows[i]["id"]), toText(dt.Rows[i]["BookName"]), toText(dt.Rows[i]["ArcFileName"]), toText(dt.Rows[i]["MD5"]), toText(dt.Rows[i]["Lang"])));
+                    return (books);
+                }
+            }
+            catch { throw; }
+        }
+
+        public BookRow Select(int id)
+        {
+            string sql_request = String.Format("SELECT * FROM Book WHERE id = {0}", id);
+
+            try
+            {
+                using (DataTable dt = this.ExecuteReader(sql_request))
+                    return (dt.Rows.Count > 0) ? new BookRow(toInt(dt.Rows[0]["id"]), toText(dt.Rows[0]["BookName"]), toText(dt.Rows[0]["ArcFileName"]), toText(dt.Rows[0]["MD5"]), toText(dt.Rows[0]["Lang"])) : null;
+            }
+            catch { throw; }
+
+        }
+
         public BookRow Select(string MD5)
         {
             string sql_request = String.Format("SELECT * FROM {0} WHERE MD5 = '{1}'", DBTableName, MD5);
@@ -292,6 +324,19 @@ namespace FB2Snitch.DAL
             }
             catch { throw; }
         }
+
+        public bool Delete(int id)
+        {
+            string sql_request = string.Format("DELETE FROM {0} WHERE id = ", DBTableName, id);
+
+            try
+            {
+                return ExecuteNonQuery(sql_request) > 0 ? true : false;
+            }
+            catch { throw; }
+        }
+
+
     }
 
     public class AuthorTbl : AbstractTbl
@@ -734,18 +779,13 @@ namespace FB2Snitch.DAL
 
         public BookRow GetBookById(int id)
         {
-            List<BookRow> books = new List<BookRow>();
-
-            string sql_request = String.Format("SELECT * FROM Book WHERE id = {0}", id);
-
-            try
-            {
-                using (DataTable dt = this.ExecuteReader(sql_request))
-                    return (dt.Rows.Count > 0) ? new BookRow(toInt(dt.Rows[0]["id"]), toText(dt.Rows[0]["BookName"]), toText(dt.Rows[0]["ArcFileName"]), toText(dt.Rows[0]["MD5"]), toText(dt.Rows[0]["Lang"])) : null;
-            }
-            catch { throw; }
+            return tblBookBase.Select(id);
         }
 
+        public List<BookRow> GetAllBooks()
+        {
+            return tblBookBase.Select();
+        }
 
         public bool CheckConnection()
         {
@@ -803,6 +843,11 @@ namespace FB2Snitch.DAL
                 }
             }
             catch { throw; }
+        }
+
+        public bool DeleteBookById(int id)
+        {
+            return tblBookBase.Delete(id);
         }
     }
 

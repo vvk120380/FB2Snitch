@@ -29,3 +29,4 @@ C:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.SettingsForm.re
 C:\WorkingStorage\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.csprojResolveAssemblyReference.cache
 C:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.csprojResolveAssemblyReference.cache
 C:\Coding\FB2Snitch\FB2Snitch\obj\Debug\BookcaseDB.AboutForm.resources
+C:\Coding\FB2Snitch\FB2Snitch\obj\Debug\FB2Snitch.UIL.VerifyDBForm.resources

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using FB2Snitch.DAL;
 using FB2Snitch.BLL;
 using BookcaseDB;
+using FB2Snitch.UIL;
 
 namespace FB2Snitch
 {
@@ -341,7 +342,8 @@ namespace FB2Snitch
 
         private void verifyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            VerifyDBForm VerifyDlg = new VerifyDBForm(Mng);
+            VerifyDlg.ShowDialog();
         }
     }
 }

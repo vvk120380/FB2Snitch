@@ -131,6 +131,11 @@ namespace FB2Snitch.BLL
             return dbManager.GetBookById(id);
         }
 
+        public List<DAL.BookRow> GetAllBooks()
+        {
+            return dbManager.GetAllBooks();
+        }
+
         public int GetBookCount()
         {
             return dbManager.GetBookCount();
@@ -138,6 +143,11 @@ namespace FB2Snitch.BLL
         public int GetAuthorCount()
         {
             return dbManager.GetAuthorCount();
+        }
+
+        public bool DeleteBookById(int id)
+        {
+            return dbManager.DeleteBookById(id);
         }
     }
 }

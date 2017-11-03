@@ -42,7 +42,6 @@
             this.tsProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.slProgress = new System.Windows.Forms.ToolStripStatusLabel();
             this.cbAutoDelete = new System.Windows.Forms.CheckBox();
-            this.btnStop = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -169,22 +168,12 @@
             this.cbAutoDelete.Text = "Автоматически удалять успешно обработанные файлы (вновь и ранее добавленные)";
             this.cbAutoDelete.UseVisualStyleBackColor = true;
             // 
-            // btnStop
-            // 
-            this.btnStop.Location = new System.Drawing.Point(121, 295);
-            this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(103, 23);
-            this.btnStop.TabIndex = 9;
-            this.btnStop.Text = "Stop";
-            this.btnStop.UseVisualStyleBackColor = true;
-            // 
             // ImportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(624, 380);
             this.ControlBox = false;
-            this.Controls.Add(this.btnStop);
             this.Controls.Add(this.cbAutoDelete);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.btnClose);
@@ -223,6 +212,5 @@
         private System.Windows.Forms.ToolStripStatusLabel slProgress;
         private System.Windows.Forms.ToolStripProgressBar tsProgress;
         private System.Windows.Forms.CheckBox cbAutoDelete;
-        private System.Windows.Forms.Button btnStop;
     }
 }
