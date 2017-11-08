@@ -131,27 +131,5 @@ namespace FB2Snitch.BLL
         }
         #endregion
 
-        #region [IsFilePresent] Проверяет что зананый файл присутствует в архиве
-        public static List<string> GetAllFilesInArc(string arcpath)
-        {
-            List<string> books = new List<string>();
-            try
-            {
-                string[] files = System.IO.Directory.GetFiles(arcpath, "*.zip", System.IO.SearchOption.TopDirectoryOnly);
-                foreach (string file in files)
-                {
-                    List<string> lFiles = ZipLib.GetFiles(file);
-                    books.AddRange(lFiles);
-                }
-                return (books);
-            }
-            catch
-            {
-                return (null);
-            }
-        }
-        #endregion
-
-
     }
 }

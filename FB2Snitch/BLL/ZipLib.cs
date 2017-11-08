@@ -164,6 +164,7 @@ namespace FB2Snitch.BLL
             {
                 using (ZipArchive archive = ZipFile.Open(arc_name, zip_mode, Encoding.GetEncoding("cp866")))
                 {
+                    FileInfo fi = new FileInfo(filename);
                     IEnumerable<ZipArchiveEntry> query = archive.Entries.Where(q => q.Name == filename);
                     List<ZipArchiveEntry> list = query.ToList<ZipArchiveEntry>();
                     for (int i = 0; i < list.Count; i++) list[i].Delete();
@@ -187,6 +188,7 @@ namespace FB2Snitch.BLL
             {
                 using (ZipArchive archive = ZipFile.Open(arc_name, zip_mode, Encoding.GetEncoding("cp866")))
                 {
+                    FileInfo fi = new FileInfo(filename);
                     IEnumerable<ZipArchiveEntry> query = archive.Entries.Where(q => q.Name == filename);
                     List<ZipArchiveEntry> list = query.ToList<ZipArchiveEntry>();
                     if (list.Count == 0) return (false);
@@ -211,6 +213,7 @@ namespace FB2Snitch.BLL
             {
                 using (ZipArchive archive = ZipFile.Open(arc_name, zip_mode, Encoding.GetEncoding("cp866")))
                 {
+                    FileInfo fi = new FileInfo(filename);
                     IEnumerable<ZipArchiveEntry> query = archive.Entries.Where(q => q.Name == filename);
                     List<ZipArchiveEntry> list = query.ToList<ZipArchiveEntry>();
                     return (list.Count == 0) ? false : true;
@@ -219,27 +222,6 @@ namespace FB2Snitch.BLL
             catch { throw new FB2ZipException(String.Format("Не удалось извлечь файл <{0}> из архива <{1}>", filename, arc_name)); }
         }
         #endregion
-
-        #region [IsFilePresent] Проверяет, что файл присутствует в архиве
-        static public List<string> GetFiles(string arc_name)
-        {
-            ZipArchiveMode zip_mode = ZipArchiveMode.Read;
-
-            if (!File.Exists(arc_name))
-                throw new FB2ZipException(String.Format("Файл <{0}> не найден", arc_name));
-
-            try
-            {
-                using (ZipArchive archive = ZipFile.Open(arc_name, zip_mode, Encoding.GetEncoding("cp866")))
-                {
-                    List<string> list = archive.Entries.Select(q => q.Name).ToList<string>();
-                    return list;
-                }
-            }
-            catch { throw new FB2ZipException(String.Format("Не удалось извлечь файлы из архива <{1}>", arc_name)); }
-        }
-        #endregion
-
 
     }
 
