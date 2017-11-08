@@ -41,6 +41,7 @@
             this.btnFind = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
+            this.tsTime = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -52,7 +53,7 @@
             this.columnHeader3});
             this.lvFiles.Location = new System.Drawing.Point(12, 12);
             this.lvFiles.Name = "lvFiles";
-            this.lvFiles.Size = new System.Drawing.Size(600, 310);
+            this.lvFiles.Size = new System.Drawing.Size(658, 310);
             this.lvFiles.TabIndex = 0;
             this.lvFiles.UseCompatibleStateImageBehavior = false;
             this.lvFiles.View = System.Windows.Forms.View.Details;
@@ -60,17 +61,17 @@
             // columnHeader1
             // 
             this.columnHeader1.Text = "Наименование книги";
-            this.columnHeader1.Width = 216;
+            this.columnHeader1.Width = 245;
             // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "Имя архива";
-            this.columnHeader2.Width = 179;
+            this.columnHeader2.Width = 151;
             // 
             // columnHeader3
             // 
             this.columnHeader3.Text = "MD5";
-            this.columnHeader3.Width = 179;
+            this.columnHeader3.Width = 245;
             // 
             // statusStrip1
             // 
@@ -79,10 +80,11 @@
             this.slStatus,
             this.tsProgress,
             this.slProgress,
+            this.tsTime,
             this.tsError});
             this.statusStrip1.Location = new System.Drawing.Point(0, 358);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(624, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(678, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -96,7 +98,7 @@
             // 
             this.slStatus.AutoSize = false;
             this.slStatus.Name = "slStatus";
-            this.slStatus.Size = new System.Drawing.Size(130, 17);
+            this.slStatus.Size = new System.Drawing.Size(150, 17);
             this.slStatus.Text = "Ожидает обработки...";
             this.slStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -122,7 +124,7 @@
             this.tsError.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tsError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.tsError.Name = "tsError";
-            this.tsError.Size = new System.Drawing.Size(100, 17);
+            this.tsError.Size = new System.Drawing.Size(80, 17);
             this.tsError.Text = "123";
             this.tsError.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
@@ -138,7 +140,7 @@
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(536, 328);
+            this.btnClose.Location = new System.Drawing.Point(595, 328);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 3;
@@ -156,11 +158,18 @@
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
+            // tsTime
+            // 
+            this.tsTime.AutoSize = false;
+            this.tsTime.Name = "tsTime";
+            this.tsTime.Size = new System.Drawing.Size(64, 17);
+            this.tsTime.Text = "00:00:00.00";
+            // 
             // VerifyDBForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 380);
+            this.ClientSize = new System.Drawing.Size(678, 380);
             this.ControlBox = false;
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnClose);
@@ -197,5 +206,6 @@
         private System.Windows.Forms.ToolStripStatusLabel tsError;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.ToolStripStatusLabel tsTime;
     }
 }
