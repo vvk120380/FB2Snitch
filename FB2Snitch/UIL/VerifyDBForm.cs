@@ -64,8 +64,8 @@ namespace FB2Snitch.UIL
 
         private async void btnFind_Click(object sender, EventArgs e)
         {
-            UpdateBtnEnableStatus(false, false, false);
-            UpdateStatusBarValues(0, 0, 0, "Формирование списка...", "00:00:00");
+            UpdateBtnEnable(false, false, false);
+            UpdateStatusBar(0, 0, 0, "Формирование списка...", "00:00:00");
 
             //Получаем список книг из БД 
             List<DAL.BookRow> rows = await Task.Factory.StartNew<List<DAL.BookRow>>(() => Worker.GetBooksListFromDB(Mng), TaskCreationOptions.LongRunning);
@@ -74,7 +74,7 @@ namespace FB2Snitch.UIL
             List<string> arcFiles = await Task.Factory.StartNew<List<string>>(() => Worker.GetBooksListFromArcs(), TaskCreationOptions.LongRunning);
             arcFiles.Sort();
 
-            UpdateStatusBarValues(rows.Count, 0, 0, "Обработка...", "00:00:00");
+            UpdateStatusBar(rows.Count, 0, 0, "Обработка...", "00:00:00");
 
             //Проверяем соответствие файлов в БД и в архивах 
             List<DAL.BookRow> errRows= await Task.Factory.StartNew<List<DAL.BookRow>> (() => Worker.CheckBooks(progress, rows, arcFiles), TaskCreationOptions.None);
@@ -91,14 +91,14 @@ namespace FB2Snitch.UIL
             }
             lvFiles.EndUpdate();
 
-            UpdateStatusBarValues(rows.Count, rows.Count, errRows.Count, "Завершено...", tsTime.Text);
-            UpdateBtnEnableStatus(true, true, true);
+            UpdateStatusBar(rows.Count, rows.Count, errRows.Count, "Завершено...", tsTime.Text);
+            UpdateBtnEnable(true, true, true);
 
             //MessageBox.Show(elapsedTime, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
 
-        private void UpdateStatusBarValues(int total, int curr, int err, string status, string time)
+        private void UpdateStatusBar(int total, int curr, int err, string status, string time)
         {
             ((IProgress<ProgessRet>)progress).Report(new ProgessRet(total, curr, err, status, time));
             slStatus.Text = status;
@@ -112,8 +112,8 @@ namespace FB2Snitch.UIL
 
         private async void btnDelete_Click(object sender, EventArgs e)
         {
-            UpdateBtnEnableStatus(false, false, false);
-            UpdateStatusBarValues(lvFiles.Items.Count, 0, 0, "Удаление...", "00:00:00");
+            UpdateBtnEnable(false, false, false);
+            UpdateStatusBar(lvFiles.Items.Count, 0, 0, "Удаление...", "00:00:00");
             tsError.Text = lvFiles.Items.Count.ToString();
 
             int iTotal = lvFiles.Items.Count; 
@@ -122,13 +122,13 @@ namespace FB2Snitch.UIL
                 int id = Convert.ToInt16(lvFiles.Items[i].Tag);
                 bool status = await Task.Factory.StartNew<bool>(() => Worker.DeleteFile(Mng, id), TaskCreationOptions.LongRunning);
                 lvFiles.Items[i].Remove();
-                UpdateStatusBarValues(iTotal, iTotal - i, 0, "Удаление...", "00:00:00");
+                UpdateStatusBar(iTotal, iTotal - i, 0, "Удаление...", "00:00:00");
                 tsError.Text = lvFiles.Items.Count.ToString();
             }
-            UpdateBtnEnableStatus(true, true, true);
+            UpdateBtnEnable(true, true, true);
         }
 
-        private void UpdateBtnEnableStatus(bool сlose, bool find, bool delete)
+        private void UpdateBtnEnable(bool сlose, bool find, bool delete)
         {
             btnClose.Enabled  = сlose;
             btnFind.Enabled   = find;
@@ -137,7 +137,7 @@ namespace FB2Snitch.UIL
 
         private void VerifyDBForm_Load(object sender, EventArgs e)
         {
-            UpdateStatusBarValues(0, 0, 0, "Ожидание обработки...", "00:00:00");
+            UpdateStatusBar(0, 0, 0, "Ожидание обработки...", "00:00:00");
         }
     }
 
