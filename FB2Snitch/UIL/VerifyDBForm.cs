@@ -64,30 +64,17 @@ namespace FB2Snitch.UIL
 
         private async void btnFind_Click(object sender, EventArgs e)
         {
-<<<<<<< HEAD
             UpdateBtnEnable(false, false, false);
             UpdateStatusBar(0, 0, 0, "Формирование списка...", "00:00:00");
 
             //Получаем список книг из БД 
             List<DAL.BookRow> rows = await Task.Factory.StartNew<List<DAL.BookRow>>(() => Worker.GetBooksListFromDB(Mng), TaskCreationOptions.LongRunning);
 
-=======
-            UpdateBtnEnableStatus(false, false, false);
-            UpdateStatusBarValues(0, 0, 0, "Формирование списка...", "00:00:00");
-
-            //Получаем список книг из БД 
-            List<DAL.BookRow> rows = await Task.Factory.StartNew<List<DAL.BookRow>>(() => Worker.GetBooksListFromDB(Mng), TaskCreationOptions.LongRunning);
-
->>>>>>> origin/master
             //Получаем список файлов содержащихся в архивах и сортируем его 
             List<string> arcFiles = await Task.Factory.StartNew<List<string>>(() => Worker.GetBooksListFromArcs(), TaskCreationOptions.LongRunning);
             arcFiles.Sort();
 
-<<<<<<< HEAD
             UpdateStatusBar(rows.Count, 0, 0, "Обработка...", "00:00:00");
-=======
-            UpdateStatusBarValues(rows.Count, 0, 0, "Обработка...", "00:00:00");
->>>>>>> origin/master
 
             //Проверяем соответствие файлов в БД и в архивах 
             List<DAL.BookRow> errRows= await Task.Factory.StartNew<List<DAL.BookRow>> (() => Worker.CheckBooks(progress, rows, arcFiles), TaskCreationOptions.None);
@@ -103,27 +90,14 @@ namespace FB2Snitch.UIL
                 lvFiles.Items.Add(lvi);
             }
             lvFiles.EndUpdate();
-<<<<<<< HEAD
 
             UpdateStatusBar(rows.Count, rows.Count, errRows.Count, "Завершено...", tsTime.Text);
             UpdateBtnEnable(true, true, true);
 
-            //MessageBox.Show(elapsedTime, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-=======
-
-            UpdateStatusBarValues(rows.Count, rows.Count, errRows.Count, "Завершено...", tsTime.Text);
-            UpdateBtnEnableStatus(true, true, true);
->>>>>>> origin/master
-
-            //MessageBox.Show(elapsedTime, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
 
-<<<<<<< HEAD
         private void UpdateStatusBar(int total, int curr, int err, string status, string time)
-=======
-        private void UpdateStatusBarValues(int total, int curr, int err, string status, string time)
->>>>>>> origin/master
         {
             ((IProgress<ProgessRet>)progress).Report(new ProgessRet(total, curr, err, status, time));
             slStatus.Text = status;
@@ -137,13 +111,8 @@ namespace FB2Snitch.UIL
 
         private async void btnDelete_Click(object sender, EventArgs e)
         {
-<<<<<<< HEAD
             UpdateBtnEnable(false, false, false);
             UpdateStatusBar(lvFiles.Items.Count, 0, 0, "Удаление...", "00:00:00");
-=======
-            UpdateBtnEnableStatus(false, false, false);
-            UpdateStatusBarValues(lvFiles.Items.Count, 0, 0, "Удаление...", "00:00:00");
->>>>>>> origin/master
             tsError.Text = lvFiles.Items.Count.ToString();
 
             int iTotal = lvFiles.Items.Count; 
@@ -152,11 +121,7 @@ namespace FB2Snitch.UIL
                 int id = Convert.ToInt16(lvFiles.Items[i].Tag);
                 bool status = await Task.Factory.StartNew<bool>(() => Worker.DeleteFile(Mng, id), TaskCreationOptions.LongRunning);
                 lvFiles.Items[i].Remove();
-<<<<<<< HEAD
                 UpdateStatusBar(iTotal, iTotal - i, 0, "Удаление...", "00:00:00");
-=======
-                UpdateStatusBarValues(iTotal, iTotal - i, 0, "Удаление...", "00:00:00");
->>>>>>> origin/master
                 tsError.Text = lvFiles.Items.Count.ToString();
             }
             UpdateBtnEnable(true, true, true);
@@ -171,11 +136,7 @@ namespace FB2Snitch.UIL
 
         private void VerifyDBForm_Load(object sender, EventArgs e)
         {
-<<<<<<< HEAD
             UpdateStatusBar(0, 0, 0, "Ожидание обработки...", "00:00:00");
-=======
-            UpdateStatusBarValues(0, 0, 0, "Ожидание обработки...", "00:00:00");
->>>>>>> origin/master
         }
     }
 
