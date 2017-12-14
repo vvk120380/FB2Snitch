@@ -13,6 +13,9 @@ namespace FB2Snitch
     public partial class ImportForm : Form
     {
         BLL.FB2SnitchManager Mng;
+
+        Progress<ProgessRet> progress;
+
         public ImportForm()
         {
             InitializeComponent();
@@ -134,7 +137,7 @@ namespace FB2Snitch
     }
 
 
-    class Worker
+    public partial class Worker
     {
         public static BLL.RetStatus AddFile(BLL.FB2SnitchManager Mng, string fn)
         {

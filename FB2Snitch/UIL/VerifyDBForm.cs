@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FB2Snitch.UIL
+namespace FB2Snitch
 {
 
     public struct ProgessRet
@@ -41,9 +41,8 @@ namespace FB2Snitch.UIL
 
         BLL.FB2SnitchManager Mng;
 
-
-
         Progress<ProgessRet> progress;
+
         public VerifyDBForm()
         {
             InitializeComponent();
@@ -115,15 +114,34 @@ namespace FB2Snitch.UIL
             UpdateStatusBar(lvFiles.Items.Count, 0, 0, "Удаление...", "00:00:00");
             tsError.Text = lvFiles.Items.Count.ToString();
 
-            int iTotal = lvFiles.Items.Count; 
+            List<int> ids = new List<int>();
+
+            int iTotal = lvFiles.Items.Count;
+
             for (int i = iTotal - 1; i >= 0; i--)
+                ids.Add(Convert.ToInt16(lvFiles.Items[i].Tag));
+
+
+            List<int> errIds = await Task.Factory.StartNew<List<int>>(() => Worker.DeleteFile(progress, Mng, ids), TaskCreationOptions.LongRunning);
+
+            lvFiles.BeginUpdate();
+            if (errIds.Count == 0) lvFiles.Items.Clear();
+            else
             {
-                int id = Convert.ToInt16(lvFiles.Items[i].Tag);
-                bool status = await Task.Factory.StartNew<bool>(() => Worker.DeleteFile(Mng, id), TaskCreationOptions.LongRunning);
-                lvFiles.Items[i].Remove();
-                UpdateStatusBar(iTotal, iTotal - i, 0, "Удаление...", "00:00:00");
-                tsError.Text = lvFiles.Items.Count.ToString();
+                //Удалить все, кроме тех. что в списке
+                //Прододимся по списку, берем id и проверяем, есть ли он в errIds листе
+                //Если есть, то удаляем его
+                for (int i = iTotal - 1; i >= 0; i--)
+                {
+                    int id = Convert.ToInt16(lvFiles.Items[i].Tag);
+                    if (errIds.Where(x => x == id).ToList<int>().Count > 0)
+                        lvFiles.Items[i].Remove();
+                }
             }
+
+            lvFiles.EndUpdate();
+
+            UpdateStatusBar(ids.Count, ids.Count, Convert.ToInt32(tsError.Text), "Завершено...", tsTime.Text);
             UpdateBtnEnable(true, true, true);
         }
 
@@ -138,9 +156,10 @@ namespace FB2Snitch.UIL
         {
             UpdateStatusBar(0, 0, 0, "Ожидание обработки...", "00:00:00");
         }
+
     }
 
-    class Worker
+    public partial class Worker
     {
         public static List<DAL.BookRow> GetBooksListFromDB(BLL.FB2SnitchManager Mng)
         {
@@ -155,6 +174,30 @@ namespace FB2Snitch.UIL
         public static bool DeleteFile(BLL.FB2SnitchManager Mng, int id)
         {
             return Mng.DeleteBookById(id);
+        }
+
+        public static List<int> DeleteFile(IProgress<ProgessRet> progress, BLL.FB2SnitchManager Mng, List<int> ids)
+        {
+            TimeSpan ts;
+            string elapsedTime;
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+
+            List<int> errIds = new List<int>();
+
+            for (int i = 0; i < ids.Count; i++)
+            {
+                bool ret = Mng.DeleteBookById(ids[i]);
+                if (!ret) errIds.Add(ids[i]);
+
+                ts = stopWatch.Elapsed;
+                elapsedTime = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
+
+                progress.Report(new ProgessRet(ids.Count, i + 1, errIds.Count, "Удаление...", elapsedTime));
+            }
+            stopWatch.Stop();
+
+            return errIds;
         }
 
 

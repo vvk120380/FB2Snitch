@@ -1,4 +1,4 @@
-﻿namespace FB2Snitch.UIL
+﻿namespace FB2Snitch
 {
     partial class VerifyDBForm
     {
@@ -37,11 +37,11 @@
             this.slStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.slProgress = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsTime = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsError = new System.Windows.Forms.ToolStripStatusLabel();
             this.btnFind = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
-            this.tsTime = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -118,6 +118,13 @@
             this.slProgress.Text = "100000 из 100000 (100%)";
             this.slProgress.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // tsTime
+            // 
+            this.tsTime.AutoSize = false;
+            this.tsTime.Name = "tsTime";
+            this.tsTime.Size = new System.Drawing.Size(64, 17);
+            this.tsTime.Text = "00:00:00.00";
+            // 
             // tsError
             // 
             this.tsError.AutoSize = false;
@@ -157,13 +164,6 @@
             this.btnDelete.Text = "Delete";
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-            // 
-            // tsTime
-            // 
-            this.tsTime.AutoSize = false;
-            this.tsTime.Name = "tsTime";
-            this.tsTime.Size = new System.Drawing.Size(64, 17);
-            this.tsTime.Text = "00:00:00.00";
             // 
             // VerifyDBForm
             // 

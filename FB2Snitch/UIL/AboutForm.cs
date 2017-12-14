@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace BookcaseDB
+namespace FB2Snitch
 {
     public partial class AboutForm : Form
     {

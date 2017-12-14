@@ -1,4 +1,4 @@
-﻿namespace BookcaseDB
+﻿namespace FB2Snitch
 {
     partial class AboutForm
     {

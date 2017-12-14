@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FB2Snitch
+namespace FB2Snitch.UIL
 {
     static class Program
     {

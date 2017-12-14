@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using FB2Snitch.DAL;
 using FB2Snitch.BLL;
-using BookcaseDB;
+using FB2Snitch;
 using FB2Snitch.UIL;
 
 namespace FB2Snitch
@@ -149,6 +149,10 @@ namespace FB2Snitch
         {
             ImportForm importForm = new ImportForm(Mng);
             importForm.ShowDialog();
+
+            LoadLanguages();
+            LoadTreeViewData();
+            UpdateStatusBar();
         }
 
 
@@ -344,6 +348,7 @@ namespace FB2Snitch
         {
             VerifyDBForm VerifyDlg = new VerifyDBForm(Mng);
             VerifyDlg.ShowDialog();
+
         }
     }
 }

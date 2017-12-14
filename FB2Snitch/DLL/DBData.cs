@@ -327,8 +327,7 @@ namespace FB2Snitch.DAL
 
         public bool Delete(int id)
         {
-            string sql_request = string.Format("DELETE FROM {0} WHERE id = ", DBTableName, id);
-
+            string sql_request = string.Format("DELETE FROM {0} WHERE id = {1}", DBTableName, id);
             try
             {
                 return ExecuteNonQuery(sql_request) > 0 ? true : false;
