@@ -40,7 +40,6 @@ namespace FB2Snitch
     {
 
         BLL.FB2SnitchManager Mng;
-
         Progress<ProgessRet> progress;
 
         public VerifyDBForm()

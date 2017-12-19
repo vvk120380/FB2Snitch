@@ -42,6 +42,8 @@
             this.tsProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.slProgress = new System.Windows.Forms.ToolStripStatusLabel();
             this.cbAutoDelete = new System.Windows.Forms.CheckBox();
+            this.tsTime = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsError = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,7 +53,7 @@
             this.tbPath.Location = new System.Drawing.Point(57, 22);
             this.tbPath.Name = "tbPath";
             this.tbPath.ReadOnly = true;
-            this.tbPath.Size = new System.Drawing.Size(472, 20);
+            this.tbPath.Size = new System.Drawing.Size(492, 20);
             this.tbPath.TabIndex = 0;
             // 
             // label1
@@ -65,7 +67,7 @@
             // 
             // btnSelectPath
             // 
-            this.btnSelectPath.Location = new System.Drawing.Point(537, 20);
+            this.btnSelectPath.Location = new System.Drawing.Point(555, 20);
             this.btnSelectPath.Name = "btnSelectPath";
             this.btnSelectPath.Size = new System.Drawing.Size(75, 23);
             this.btnSelectPath.TabIndex = 2;
@@ -80,7 +82,7 @@
             this.columnHeader2});
             this.lvFiles.Location = new System.Drawing.Point(12, 48);
             this.lvFiles.Name = "lvFiles";
-            this.lvFiles.Size = new System.Drawing.Size(600, 240);
+            this.lvFiles.Size = new System.Drawing.Size(619, 240);
             this.lvFiles.TabIndex = 3;
             this.lvFiles.UseCompatibleStateImageBehavior = false;
             this.lvFiles.View = System.Windows.Forms.View.Details;
@@ -88,7 +90,7 @@
             // columnHeader1
             // 
             this.columnHeader1.Text = "Имя файла";
-            this.columnHeader1.Width = 472;
+            this.columnHeader1.Width = 490;
             // 
             // columnHeader2
             // 
@@ -107,7 +109,7 @@
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(537, 295);
+            this.btnClose.Location = new System.Drawing.Point(556, 295);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 6;
@@ -121,10 +123,12 @@
             this.toolStripStatusLabel1,
             this.slStatus,
             this.tsProgress,
-            this.slProgress});
+            this.slProgress,
+            this.tsTime,
+            this.tsError});
             this.statusStrip1.Location = new System.Drawing.Point(0, 358);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(624, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(643, 22);
             this.statusStrip1.TabIndex = 7;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -168,11 +172,28 @@
             this.cbAutoDelete.Text = "Автоматически удалять успешно обработанные файлы (вновь и ранее добавленные)";
             this.cbAutoDelete.UseVisualStyleBackColor = true;
             // 
+            // tsTime
+            // 
+            this.tsTime.AutoSize = false;
+            this.tsTime.Name = "tsTime";
+            this.tsTime.Size = new System.Drawing.Size(64, 17);
+            this.tsTime.Text = "00:00:00.00";
+            // 
+            // tsError
+            // 
+            this.tsError.AutoSize = false;
+            this.tsError.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.tsError.ForeColor = System.Drawing.Color.Red;
+            this.tsError.Name = "tsError";
+            this.tsError.Size = new System.Drawing.Size(80, 17);
+            this.tsError.Text = "0";
+            this.tsError.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // ImportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 380);
+            this.ClientSize = new System.Drawing.Size(643, 380);
             this.ControlBox = false;
             this.Controls.Add(this.cbAutoDelete);
             this.Controls.Add(this.statusStrip1);
@@ -212,5 +233,7 @@
         private System.Windows.Forms.ToolStripStatusLabel slProgress;
         private System.Windows.Forms.ToolStripProgressBar tsProgress;
         private System.Windows.Forms.CheckBox cbAutoDelete;
+        private System.Windows.Forms.ToolStripStatusLabel tsTime;
+        private System.Windows.Forms.ToolStripStatusLabel tsError;
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,14 @@ namespace FB2Snitch
         public ImportForm()
         {
             InitializeComponent();
+            progress = new Progress<ProgessRet>(s => {
+                slProgress.Text = s.ToString();
+                tsProgress.Maximum = s.total;
+                tsProgress.Step = 1;
+                tsProgress.Value = s.cur;
+                tsError.Text = s.err.ToString();
+                tsTime.Text = s.time;
+            });
         }
 
         public ImportForm(BLL.FB2SnitchManager Mng) : this()
@@ -67,14 +76,28 @@ namespace FB2Snitch
             UpdateStatusBarValues(iCurr, iTotal, "Обработка");
             UpdateBtnEnableStatus(false, false, false);
 
-            foreach (ListViewItem lvi in lvFiles.Items)
-            {
-                iCurr++;
-                BLL.RetStatus status = await Task.Factory.StartNew<BLL.RetStatus>(() => Worker.AddFile(Mng, String.Format("{0}\\{1}", tbPath.Text, lvi.SubItems[0].Text)), TaskCreationOptions.LongRunning);
-                UpadateListViewItem(lvi, status);
-                UpdateStatusBarValues(iCurr, iTotal, "Обработка");                
-                lvFiles.EnsureVisible(lvi.Index); // Автоматический скрол до выбранного элемента
-            }
+            //Формируем список файлов
+            List<string> fns = new List<string>();
+            for (int i = 0; i < lvFiles.Items.Count; i++)
+                fns.Add(String.Format("{0}\\{1}", tbPath.Text, lvFiles.Items[i].SubItems[0].Text));
+
+            //Добавляем файлы в архив и в БД
+            List<BLL.RetStatus> stateList = await Task.Factory.StartNew<List<BLL.RetStatus>>(() => Worker.AddFiles(progress, Mng, fns), TaskCreationOptions.LongRunning);
+
+            //Отображаем состояние - был ли файл добавлен и если нет, то почему
+            lvFiles.BeginUpdate();
+            for (int i = 0; i < lvFiles.Items.Count; i++)
+                UpadateListViewItem(lvFiles.Items[i], stateList[i]);
+            lvFiles.EndUpdate();
+
+            //foreach (ListViewItem lvi in lvFiles.Items)
+            //{
+            //    iCurr++;
+            //    BLL.RetStatus status = await Task.Factory.StartNew<BLL.RetStatus>(() => Worker.AddFile(Mng, String.Format("{0}\\{1}", tbPath.Text, lvi.SubItems[0].Text)), TaskCreationOptions.LongRunning);
+            //    UpadateListViewItem(lvi, status);
+            //    UpdateStatusBarValues(iCurr, iTotal, "Обработка");                
+            //    lvFiles.EnsureVisible(lvi.Index); // Автоматический скрол до выбранного элемента                
+            //}
 
             UpdateStatusBarValues(iCurr, iTotal, "Удаление");
             if (cbAutoDelete.Checked)
@@ -142,6 +165,29 @@ namespace FB2Snitch
         public static BLL.RetStatus AddFile(BLL.FB2SnitchManager Mng, string fn)
         {
             return Mng.AddBook(fn);
+        }
+
+        public static List<BLL.RetStatus> AddFiles(IProgress<ProgessRet> progress, BLL.FB2SnitchManager Mng, List<string> fns)
+        {
+            TimeSpan ts;
+            string elapsedTime;
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+
+            List<BLL.RetStatus> stateList = new List<BLL.RetStatus>();
+            int err = 0;
+            for (int i = 0; i < fns.Count; i++)
+            {
+
+                BLL.RetStatus retStatus = Mng.AddBook(fns[i]);
+                if (retStatus.error != BLL.eRetError.NoErr) err++;
+                stateList.Add(retStatus);
+                ts = stopWatch.Elapsed;
+                elapsedTime = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
+                progress.Report(new ProgessRet(fns.Count, i + 1, err, "Обработка...", elapsedTime));
+            }
+            stopWatch.Stop();
+            return stateList;
         }
 
         public static bool DeleteFile(string fn)
