@@ -118,7 +118,7 @@ namespace FB2Snitch
             int iTotal = lvFiles.Items.Count;
 
             for (int i = iTotal - 1; i >= 0; i--)
-                ids.Add(Convert.ToInt16(lvFiles.Items[i].Tag));
+                ids.Add(Convert.ToInt32(lvFiles.Items[i].Tag));
 
 
             List<int> errIds = await Task.Factory.StartNew<List<int>>(() => Worker.DeleteFile(progress, Mng, ids), TaskCreationOptions.LongRunning);
@@ -132,7 +132,7 @@ namespace FB2Snitch
                 //Если есть, то удаляем его
                 for (int i = iTotal - 1; i >= 0; i--)
                 {
-                    int id = Convert.ToInt16(lvFiles.Items[i].Tag);
+                    int id = Convert.ToInt32(lvFiles.Items[i].Tag);
                     if (errIds.Where(x => x == id).ToList<int>().Count > 0)
                         lvFiles.Items[i].Remove();
                 }

@@ -627,13 +627,18 @@ namespace FB2Snitch.DAL
 
                 foreach (BLL.FB2Person author in fb2desc.titleinfo.author)
                 {
-                    int authorId = tblAuthor.Insert(author.firstname, author.middlename, author.lastname);
+                    int authorId = (String.IsNullOrEmpty(author.firstname) && String.IsNullOrEmpty(author.middlename) && String.IsNullOrEmpty(author.lastname)) ?
+                                    tblAuthor.Insert("Unknown", "", "") :   
+                                    tblAuthor.Insert(author.firstname, author.middlename, author.lastname);
+
                     tblBookAuthor.Insert(bookId, authorId);
                 }
 
                 foreach (string genre in fb2desc.titleinfo.genre)
                 {
-                    int genreId = tblGenre.Insert(genre);
+                    int genreId = (String.IsNullOrEmpty(genre)) ? 
+                                    tblGenre.Insert("Unknown") : 
+                                    tblGenre.Insert(genre);
                     tblBookGenre.Insert(bookId, genreId);
                 }
 

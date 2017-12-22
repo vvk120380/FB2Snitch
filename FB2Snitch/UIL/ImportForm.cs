@@ -37,7 +37,7 @@ namespace FB2Snitch
 
         private void ImportForm_Load(object sender, EventArgs e)
         {
-            UpdateStatusBarValues(0, 0, "Ожидание обработки...");
+            UpdateStatusBar(0, 0, 0, "Ожидание обработки...", "00:00:00");
         }
 
         private void btnSelectPath_Click(object sender, EventArgs e)
@@ -51,14 +51,13 @@ namespace FB2Snitch
             tbPath.Text = fbd.SelectedPath;
             string[] flist = BLL.FileUtils.GetFileList(fbd.SelectedPath);
 
-            UpdateStatusBarValues(0, 0, "Ожидание обработки...");
+            UpdateStatusBar(0, 0, 0, "Ожидание обработки...", "00:00:00");
 
             lvFiles.Items.Clear();
             lvFiles.BeginUpdate();
             foreach (string file in flist)
             {
                 ListViewItem lvi = new ListViewItem(BLL.FileUtils.GetShotFileName(file));
-                //lvi.Tag = file;
                 lvi.SubItems.Add("Не добавлен");
                 lvFiles.Items.Add(lvi);
             }
@@ -73,10 +72,10 @@ namespace FB2Snitch
             int iTotal = lvFiles.Items.Count;
             int iCurr = 0;
 
-            UpdateStatusBarValues(iCurr, iTotal, "Обработка");
+            UpdateStatusBar(iTotal, iCurr, 0, "Обработка", "00:00:00");
             UpdateBtnEnableStatus(false, false, false);
 
-            //Формируем список файлов
+            //Формируем список файлов на добавление
             List<string> fns = new List<string>();
             for (int i = 0; i < lvFiles.Items.Count; i++)
                 fns.Add(String.Format("{0}\\{1}", tbPath.Text, lvFiles.Items[i].SubItems[0].Text));
@@ -90,22 +89,43 @@ namespace FB2Snitch
                 UpadateListViewItem(lvFiles.Items[i], stateList[i]);
             lvFiles.EndUpdate();
 
-            //foreach (ListViewItem lvi in lvFiles.Items)
-            //{
-            //    iCurr++;
-            //    BLL.RetStatus status = await Task.Factory.StartNew<BLL.RetStatus>(() => Worker.AddFile(Mng, String.Format("{0}\\{1}", tbPath.Text, lvi.SubItems[0].Text)), TaskCreationOptions.LongRunning);
-            //    UpadateListViewItem(lvi, status);
-            //    UpdateStatusBarValues(iCurr, iTotal, "Обработка");                
-            //    lvFiles.EnsureVisible(lvi.Index); // Автоматический скрол до выбранного элемента                
-            //}
+            //Формируем список файлов на удаление
+            fns.Clear();
+            for (int i = 0; i < lvFiles.Items.Count; i++)
+            {
+                BLL.eRetError retErr = ((BLL.RetStatus)lvFiles.Items[i].Tag).error;
+                string path = (retErr == BLL.eRetError.NoErr || retErr == BLL.eRetError.ErrAlreadyAdd) ?
+                    String.Format("{0}\\{1}", tbPath.Text, lvFiles.Items[i].SubItems[0].Text) :
+                    String.Empty;
+                fns.Add(path);
+            }
 
-            UpdateStatusBarValues(iCurr, iTotal, "Удаление");
+            ////Удаляем файлы
+            //List<bool> retList = await Task.Factory.StartNew<List<bool>>(() => Worker.DeleteFiles(progress, fns), TaskCreationOptions.LongRunning);
+
+            ////Очищаем список от удаленных файлов
+            //lvFiles.BeginUpdate();
+            //for (int i = lvFiles.Items.Count - 1; i >= 0; i--)
+            //{
+            //    BLL.eRetError retErr = ((BLL.RetStatus)lvFiles.Items[i].Tag).error;
+            //    if (retErr == BLL.eRetError.NoErr || retErr == BLL.eRetError.ErrAlreadyAdd) continue;
+            //    if (!retList[i])
+            //    {
+            //        lvFiles.Items[i].SubItems[1].Text = "Ошибка удаления файла";
+            //        lvFiles.Items[i].Tag = new BLL.RetStatus(BLL.eRetError.ErrDelFile, ((BLL.RetStatus)lvFiles.Items[i].Tag).id);
+            //    }
+            //    else
+            //        lvFiles.Items[i].Remove();
+            //}
+            //lvFiles.EndUpdate();
+
+            UpdateStatusBar(iTotal, iCurr, Convert.ToInt32(tsError.Text), "Удаление", tsTime.Text);
             if (cbAutoDelete.Checked)
                 for (int i = lvFiles.Items.Count - 1; i >= 0; i--)
+                {
                     if (((BLL.RetStatus)lvFiles.Items[i].Tag).error == BLL.eRetError.NoErr ||
                         ((BLL.RetStatus)lvFiles.Items[i].Tag).error == BLL.eRetError.ErrAlreadyAdd)
                     {
-                        UpdateStatusBarValues(iTotal - i, iTotal, "Удаление");
                         string path = String.Format("{0}\\{1}", tbPath.Text, lvFiles.Items[i].SubItems[0].Text);
                         bool isDelete = await Task.Factory.StartNew<bool>(() => Worker.DeleteFile(path), TaskCreationOptions.LongRunning);
                         if (!isDelete)
@@ -114,25 +134,25 @@ namespace FB2Snitch
                             lvFiles.Items[i].Tag = new BLL.RetStatus(BLL.eRetError.ErrDelFile, ((BLL.RetStatus)lvFiles.Items[i].Tag).id);
                         }
                         else
-                            lvFiles.Items[i].Remove();                        
+                            lvFiles.Items[i].Remove();
                     }
+                    UpdateStatusBar(iTotal, iTotal - i, Convert.ToInt32(tsError.Text), "Удаление", tsTime.Text);
+                }
 
-            UpdateStatusBarValues(iCurr, iTotal, "Обработка завершена");
+            //UpdateStatusBar(retList.Count, retList.Count, Convert.ToInt32(tsError.Text), "Завершено...", tsTime.Text);
+
             UpdateBtnEnableStatus(true, true, true);
+        }
+
+        private void UpdateStatusBar(int total, int curr, int err, string status, string time)
+        {
+            ((IProgress<ProgessRet>)progress).Report(new ProgessRet(total, curr, err, status, time));
+            slStatus.Text = status;
         }
 
         private void btnClose_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        private void UpdateStatusBarValues(int curr, int total, string status)
-        {
-            slStatus.Text = status;
-            slProgress.Text = String.Format("({0} из {1})", curr, total);
-            tsProgress.Maximum = total;
-            tsProgress.Step = 1;
-            tsProgress.Value = curr;
         }
 
         private void UpdateBtnEnableStatus(bool сlose, bool start, bool path)
@@ -180,7 +200,7 @@ namespace FB2Snitch
             {
 
                 BLL.RetStatus retStatus = Mng.AddBook(fns[i]);
-                if (retStatus.error != BLL.eRetError.NoErr) err++;
+                if (retStatus.error != BLL.eRetError.NoErr && retStatus.error != BLL.eRetError.ErrAlreadyAdd) err++;
                 stateList.Add(retStatus);
                 ts = stopWatch.Elapsed;
                 elapsedTime = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
@@ -194,6 +214,40 @@ namespace FB2Snitch
         {
             return BLL.FileUtils.DeleteFile(fn);
         }
+
+
+        public static List<bool> DeleteFiles(IProgress<ProgessRet> progress, List<string> fns)
+        {
+            TimeSpan ts;
+            string elapsedTime;
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            int err = 0;
+            List<bool> retList = new List<bool>();
+
+            for (int i = 0; i < fns.Count; i++)
+            {
+                if (String.IsNullOrEmpty(fns[i]))
+                {
+                    retList.Add(false); continue;
+                }
+
+                if (!BLL.FileUtils.DeleteFile(fns[i]))
+                {
+                    err++;
+                    retList.Add(false);
+                }
+                else retList.Add(true);
+
+                ts = stopWatch.Elapsed;
+                elapsedTime = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
+                progress.Report(new ProgessRet(fns.Count, i + 1, err, "Обработка...", elapsedTime));
+            }
+            stopWatch.Stop();
+
+            return retList;
+        }
+
     }
 
 
