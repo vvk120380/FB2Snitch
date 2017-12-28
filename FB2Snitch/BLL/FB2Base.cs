@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -343,11 +345,9 @@ namespace FB2Snitch.BLL
                             }
                             break;
                         }
-
                 }
 
             }
-
 
             return retVal;
         }
@@ -446,26 +446,45 @@ namespace FB2Snitch.BLL
 
             try
             {
+                //using (FileStream fStream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                //{
+                TimeSpan ts_load;
+                TimeSpan ts_parse;
+                string elapsedTime;
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
                 doc.LoadXml(System.IO.File.ReadAllText(filename));
+                ts_load = stopWatch.Elapsed;
+                stopWatch.Restart();
+                //doc.Load(fStream);
 
                 Encoding fileEncoding = null;
-                // The first child of a standard XML document is the XML declaration.
-                // The following code assumes and reads the first child as the XmlDeclaration.
-                if (doc.FirstChild.NodeType == XmlNodeType.XmlDeclaration)
-                {
-                    // Get the encoding declaration.
-                    fileEncoding = Encoding.GetEncoding(((XmlDeclaration)doc.FirstChild).Encoding);
-                }
-                if (fileEncoding != null)
-                {
-                    doc.LoadXml(System.IO.File.ReadAllText(filename, fileEncoding));
-                }
+                    // The first child of a standard XML document is the XML declaration.
+                    // The following code assumes and reads the first child as the XmlDeclaration.
+                    if (doc.FirstChild.NodeType == XmlNodeType.XmlDeclaration)
+                    {
+                        // Get the encoding declaration.
+                        fileEncoding = Encoding.GetEncoding(((XmlDeclaration)doc.FirstChild).Encoding);
+                    }
+                    if (fileEncoding != null)
+                    {
+                        doc.LoadXml(System.IO.File.ReadAllText(filename, fileEncoding));
+                        Console.WriteLine(fileEncoding.ToString());
+                    }
 
-                XmlNodeList nodes = doc.DocumentElement.GetElementsByTagName("description");
-                if (nodes.Count >= 1)
-                    FB2Desc.Parse(nodes[0].ChildNodes);
-                else
-                    throw new FB2BaseException("Ошибка загрузки fb2. Элемент <description> не найден");
+                    XmlNodeList nodes = doc.DocumentElement.GetElementsByTagName("description");
+                    if (nodes.Count >= 1)
+                        FB2Desc.Parse(nodes[0].ChildNodes);
+                    else
+                        throw new FB2BaseException("Ошибка загрузки fb2. Элемент <description> не найден");
+
+                ts_parse = stopWatch.Elapsed;
+                stopWatch.Stop();
+
+                Console.WriteLine("--- read fb2 description");
+                Console.WriteLine(String.Format("--- load {0:00}.{1:00} - parse {2:00}.{3:00}",
+                                 ts_load.Seconds, ts_load.Milliseconds, ts_parse.Seconds, ts_parse.Milliseconds));
+                //}
             }
             catch (Exception ex)
             {

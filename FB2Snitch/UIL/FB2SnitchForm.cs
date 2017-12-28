@@ -83,10 +83,13 @@ namespace FB2Snitch
                     if (geners.Count == 0) { e.Cancel = true; return; }
                     e.Node.Nodes.Clear();
 
+                    Console.WriteLine($"Всего жаноров - {geners.Count}");
+                    int i = 0;
                     foreach (GenreRow gi in geners)
                     {
                         // Добавлять жанр только, если есть авторы с соответствующим языком
                         int count = Mng.GetAuthorCountByGenreId(gi.Id, tsLangCB.Text);
+                        Console.WriteLine($"{++i} of {geners.Count} - авторов {count}  - {gi.Genre} ({gi.Genre_ru})");
                         if (count == 0) continue;
 
                         TreeNode tni = new TreeNode(String.Format("{0} ({1})", String.IsNullOrEmpty(gi.Genre_ru) ? gi.Genre : gi.Genre_ru, count));
@@ -94,7 +97,7 @@ namespace FB2Snitch
                         tni.ImageIndex = 1;
                         tni.SelectedImageIndex = 1;
                         tni.Nodes.Add("@@dummnynode@@");
-                        e.Node.Nodes.Add(tni);
+                        e.Node.Nodes.Add(tni);                        
                     }
                 }
             }
@@ -123,7 +126,7 @@ namespace FB2Snitch
             {
                 if (e.Node.Nodes.Count == 1 && e.Node.Nodes[0].Text == "@@dummnynode@@")
                 {
-                    List<BookRow> books = Mng.GetBookByAuthorId((int)e.Node.Tag, tsLangCB.Text);
+                    List<BookRow> books = Mng.GetBookByAuthorId((int)e.Node.Tag, (int)e.Node.Parent.Tag, tsLangCB.Text);
                     if (books.Count == 0) { e.Cancel = true; return; }
                     e.Node.Nodes.Clear();
 

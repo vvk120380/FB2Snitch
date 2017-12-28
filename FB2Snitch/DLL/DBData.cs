@@ -758,16 +758,17 @@ namespace FB2Snitch.DAL
             catch { throw; }
         }
 
-        public List<BookRow> GetBookByAuthorId(int id, string lang)
+        public List<BookRow> GetBookByAuthorId(int id, int genre_id, string lang)
         {
             List<BookRow> books = new List<BookRow>();
 
-            string sql_request = String.Format("SELECT b.id, b.BookName, b.ArcFileName, b.MD5, b.Lang " +
-                                                "FROM Author AS a " +
-                                                "JOIN BookAuthor AS ba ON ba.AuthorId = a.id " +
-                                                "JOIN Book AS b ON b.id = ba.BookId " +
-                                                "WHERE a.id = {0} AND b.Lang = '{1}' ORDER BY b.BookName", id, lang);
-
+            string sql_request = $"SELECT b.id, b.BookName, b.ArcFileName, b.MD5, b.Lang " +
+                                  "FROM Author AS a " +
+                                  "JOIN BookAuthor AS ba ON ba.AuthorId = a.id " +
+                                  "JOIN Book AS b ON b.id = ba.BookId " +
+                                  "JOIN BookGenre AS bg ON b.id = bg.BookId " + 
+                                  "JOIN Genre AS g ON g.id = bg.GenreId " +
+                                 $"WHERE a.id = {id} AND g.id = {genre_id} AND b.Lang = '{lang}' ORDER BY b.BookName";
             try
             {
                 using (DataTable dt = this.ExecuteReader(sql_request))
