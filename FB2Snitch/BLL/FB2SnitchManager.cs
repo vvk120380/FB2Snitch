@@ -54,7 +54,8 @@ namespace FB2Snitch.BLL
                 Console.WriteLine($"-- start {fb2fullfilename}");
 
                 //1. Проверяем что это именно fb2 файл и сваливаем если это не так
-                FB2Description fb2desc = FB2Manager.ReadDecription(fb2fullfilename);
+                //FB2Description fb2desc = FB2Manager.ReadDecription(fb2fullfilename);
+                FB2Description fb2desc = FB2Manager.ReadDecriptionFast(fb2fullfilename);                
                 ts_read_description = stopWatch.Elapsed;
                 stopWatch.Restart();
                 //2. Подсчитали MD5-хешь сумму

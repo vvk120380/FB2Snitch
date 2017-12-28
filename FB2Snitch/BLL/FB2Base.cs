@@ -439,6 +439,74 @@ namespace FB2Snitch.BLL
 
     class FB2Manager
     {
+        public static Encoding GetEncoding(String fn)
+        {
+            try
+            {
+                using (XmlReader xml = XmlReader.Create(fn))
+                {
+                    while (xml.Read())
+                        switch (xml.NodeType)
+                        {
+                            case XmlNodeType.XmlDeclaration:
+                                {
+                                    String encoding = xml.GetAttribute("encoding");
+                                    if (!String.IsNullOrEmpty(encoding))
+                                        return (Encoding.GetEncoding(xml.GetAttribute("encoding")));
+                                    break;
+                                }
+                        }
+                    return null;
+                }
+            }
+            catch (XmlException ex)
+            {
+                return null;
+            }
+        }
+
+        static public FB2Description ReadDecriptionFast(string filename)
+        {
+            FB2Description FB2Desc = new FB2Description();
+            XmlDocument doc = new XmlDocument();
+
+            Encoding xmlEncode = GetEncoding(filename);
+
+            try
+            {
+                using (XmlReader xml = xmlEncode == null ? XmlReader.Create(new StreamReader(filename)) : XmlReader.Create(new StreamReader(filename, xmlEncode)))
+                {
+                    while (xml.Read())
+                    {
+                        switch (xml.NodeType)
+                        {
+                            case XmlNodeType.Element:
+                                {
+                                    if (xml.Name == "description")
+                                    {
+                                        String desc = xml.ReadOuterXml();
+                                        doc.LoadXml(desc);
+                                        XmlNodeList nodeList = doc.ChildNodes;
+                                        FB2Desc = new FB2Description();
+                                        FB2Desc.Parse(nodeList[0].ChildNodes);
+                                        return FB2Desc;
+                                    }
+                                    break;
+                                }
+                        }
+                    }
+                }
+            }
+            catch (XmlException ex)
+            {
+                Console.WriteLine(String.Format("ERROR! {0} - {1}", filename, ex.Message));
+                throw new FB2BaseException("Ошибка загрузки fb2."); ;
+            }
+
+
+            return FB2Desc;
+        }
+
         static public FB2Description ReadDecription(string filename)
         {
             FB2Description FB2Desc = new FB2Description();
